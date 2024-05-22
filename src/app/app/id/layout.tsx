@@ -6,7 +6,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       <div className="col-span-4 md:col-span-1">
         <Navbar />
       </div>
-      <div className="col-span-4 md:col-span-3 p-6 md:overflow-y-auto md:p-12">{children}</div>
+      <div className="col-span-4 md:col-span-3 bg-zinc-200 p-6 md:overflow-y-auto md:p-12">{children}</div>
     </div>
   );
 }
