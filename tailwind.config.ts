@@ -11,6 +11,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '425px',
+        sm: '576px',
+      },
       container: {
         center: true,
         padding: {
