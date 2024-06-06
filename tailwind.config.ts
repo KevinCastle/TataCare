@@ -11,6 +11,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '425px',
+        sm: '576px',
+      },
       container: {
         center: true,
         padding: {
@@ -26,6 +30,7 @@ const config: Config = {
   darkMode: 'class',
   plugins: [
     nextui({
+      addCommonColors: true,
       layout: {
         dividerWeight: '1px', // h-divider the default height applied to the divider component
         disabledOpacity: 0.5, // this value is applied as opacity-[value] when the component is disabled
