@@ -9,6 +9,8 @@ import { fetchElders } from '../api/data';
 const page = async () => {
   const elders = await fetchElders();
 
+  const fullName = (name: string, surname: string) => `${name} ${surname}`;
+
   return (
     <main className="bg-zinc-200 min-h-svh relative">
       <form
@@ -43,13 +45,13 @@ const page = async () => {
                       shadow="sm"
                       radius="lg"
                       width="100%"
-                      alt={elder.name}
+                      alt={fullName(elder.name, elder.surname)}
                       className="w-full object-cover object-top h-[200px]"
                       src="https://images.unsplash.com/photo-1612838320302-4b3b3b3b3b3b"
                     />
                   </CardBody>
                   <CardFooter className="text-small justify-between">
-                    <p className="text-xl font-bold">{elder.name}</p>
+                    <p className="text-xl font-bold truncate">{fullName(elder.name, elder.surname)}</p>
                     <span className="text-tiny h-8 w-0 flex justify-center items-center text-white bg-cyan-700/60 min-w-8 p-0 rounded-full">
                       <CaretRight size={16} />
                     </span>
