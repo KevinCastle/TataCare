@@ -28,7 +28,7 @@ const card: React.FC<CardProps> = ({
   children,
   footerContent,
 }) => (
-  <Card className="w-full">
+  <Card className="h-full w-full">
     {title && (
     <CardHeader className="flex gap-3">
         {avatar && !icon && <Avatar showFallback src={avatar} />}
