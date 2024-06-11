@@ -13,7 +13,7 @@ export async function fetchElders() {
         id,
         name,
         surname,
-        age
+        birthdate,
       FROM elders
       ORDER BY name ASC
     `;
@@ -23,6 +23,27 @@ export async function fetchElders() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all elders.');
+  }
+}
+
+export async function getElderById(id: string | string[]) {
+  let elderId = '';
+  if (Array.isArray(id)) {
+    [elderId] = Array.isArray(id) ? id : [id];
+  }
+  noStore();
+  try {
+    const elder = await sql<Elder>`
+      SELECT
+        *
+      FROM elders
+      WHERE id=${elderId}
+    `;
+
+    return elder.rows[0] as Elder;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch elder.');
   }
 }
 
