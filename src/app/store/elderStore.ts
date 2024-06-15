@@ -1,68 +1,95 @@
 import { create } from 'zustand';
-import { redirect } from 'next/navigation';
-import { Elder } from '../api/definitions';
-import {
-  updateElder, deleteElder, addElder,
-} from '../api/data';
+// import { redirect } from 'next/navigation';
+import { Elder } from '../api/elders/types';
 
 type ElderState = {
-  // elders: Elder[],
+  elders: Elder[],
   selectedElder: Elder | null
 }
 
 type ElderActions = {
-  // getAll: () => void,
-  // setAll: (elders: Elder[]) => void,
-  add: (newElder: Elder) => void,
-  edit: (key: string, data: string | boolean | number) => void,
-  remove: () => void
+  getAll: () => void,
+  getElder: (id: string) => void,
+  add: (id: string, elder: Elder) => void,
+  edit: (id: string, elder: Elder) => void,
+  remove: (id: string) => void
 }
 
 type ElderStore = ElderState & ElderActions
 
 const defaultInitState: ElderState = {
-  // elders: [],
+  elders: [],
   selectedElder: null,
 };
 
-export const useElderStore = create<ElderStore>((set, get) => ({
+export const useElderStore = create<ElderStore>((set) => ({
   ...defaultInitState,
-  // getAll: async () => {
-  //   try {
-  //     const elders = await fetchElders();
-  //     set({ elders });
-  //   } catch (error) {
-  //     console.error('Failed to fetch elders:', error);
-  //   }
-  // },
-  // setAll: (elders) => set({ elders }),
-  add: async (newElder) => {
+  getAll: async () => {
     try {
-      await addElder(newElder);
+      const response = await fetch('api/elders');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const elders = await response.json();
+      set({ elders });
+    } catch (error) {
+      console.error('Failed to fetch elders:', error);
+    }
+  },
+  getElder: async (id: string) => {
+    try {
+      const response = await fetch(`/api/elders/${id}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const elder = await response.json();
+      set({ selectedElder: elder });
     } catch (error) {
       console.error('Failed to update elder:', error);
     }
   },
-  edit: async (key, data) => {
-    const state = get();
-    if (!state.selectedElder) return;
+  add: async (id: string, elder: Elder) => {
     try {
-      await updateElder(state.selectedElder.id, key, data);
-      state.selectedElder = {
-        ...state.selectedElder,
-        [key]: data,
-      };
-      set({ selectedElder: state.selectedElder });
+      const response = await fetch(`/api/elders/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(elder),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
     } catch (error) {
       console.error('Failed to update elder:', error);
     }
   },
-  remove: async () => {
-    const { selectedElder } = get();
-    if (!selectedElder) return;
+  edit: async (id: string, elder: Elder) => {
     try {
-      await deleteElder(selectedElder.id);
-      await redirect('/app');
+      const response = await fetch(`/api/elders/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(elder),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      console.error('Failed to update elder:', error);
+    }
+  },
+  remove: async (id: string) => {
+    try {
+      const response = await fetch(`/api/elders/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const elder = await response.json();
+      set({ selectedElder: elder });
     } catch (error) {
       console.error('Failed to update elder:', error);
     }
