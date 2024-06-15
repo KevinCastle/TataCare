@@ -15,6 +15,7 @@ import { useElderStore } from '@/app/store/elderStore';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { getBloodTypeCompatibility, getAge, getBirthdate } from '@/app/utils';
+import { useAllergyStore } from '@/app/store/allergyStore';
 import Card from '../../components/card';
 
 function Page() {
@@ -25,11 +26,17 @@ function Page() {
     selectedElder: state.selectedElder,
   }));
 
+  const { getAllergies, allergies } = useAllergyStore((state) => ({
+    getAllergies: state.get,
+    allergies: state.allergies,
+  }));
+
   useEffect(() => {
     if (!elder && elderId) {
       getElder(elderId);
+      getAllergies(elderId);
     }
-  }, [elder, elderId, getElder]);
+  }, [elder, elderId, getElder, getAllergies]);
 
   return (
     <>
@@ -115,9 +122,13 @@ function Page() {
               <div className="flex gap-1 mb-5">
                 <Virus size={20} color="#0E793C" className="mt-1" />
                 <div>
-                  <p className="text-lg font-medium text-zinc-900">Mosquitos</p>
-                  <p className="text-lg font-medium text-zinc-900">Frutilla</p>
-                  <p className="text-lg font-medium text-zinc-900">Maní</p>
+                  {allergies && allergies.length > 0 ? (
+                    allergies.map((allergy) => (
+                      <p key={allergy.id} className="text-lg font-medium text-zinc-900">{allergy.detail}</p>
+                    ))
+                  ) : (
+                    <p className="text-lg font-medium text-zinc-900">No tiene alergias registradas</p>
+                  )}
                 </div>
               </div>
             </div>
