@@ -13,12 +13,10 @@ interface ElderCardListProps {
 }
 
 export default function ElderCardList({ elders }: ElderCardListProps) {
-  console.log('elders', elders);
   const router = useRouter();
   const fullName = (name: string, surname: string) => `${name} ${surname}`;
 
   const handleElderClick = (elder: Elder) => {
-    console.log('elder', elder);
     useElderStore.setState({ selectedElder: elder });
     router.push(`/app/${elder.id}`);
   };

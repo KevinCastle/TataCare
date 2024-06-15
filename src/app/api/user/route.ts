@@ -6,10 +6,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
     const email = searchParams.get('email');
-    console.log('params', email);
     const data = await sql`SELECT * FROM users WHERE email=${email}`;
     const user = data.rows[0] as User;
-    console.log(user);
     return Response.json(user);
   } catch (error) {
     console.error('Failed to fetch user:', error);
