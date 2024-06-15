@@ -6,7 +6,7 @@ import {
 } from '@phosphor-icons/react/dist/ssr';
 import { useFormState, useFormStatus } from 'react-dom';
 import { Button } from '@nextui-org/react';
-import { authenticate } from '@/app/api/actions';
+import { authenticate } from '@/app/api/user/actions';
 
 export default function LoginPage() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
@@ -66,7 +66,6 @@ export default function LoginPage() {
                 </div>
               </div>
             </div>
-            <p>{pending ? 'pending' : 'no pending'}</p>
             <Button color="primary" type="submit" className="mt-4 w-full" aria-disabled={pending}>
               Log in
               {' '}

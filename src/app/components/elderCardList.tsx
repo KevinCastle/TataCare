@@ -5,7 +5,7 @@ import {
 } from '@nextui-org/react';
 import { CaretRight } from '@phosphor-icons/react/dist/ssr';
 import { useRouter } from 'next/navigation';
-import { Elder } from '../api/definitions';
+import { Elder } from '../api/elders/types';
 import { useElderStore } from '../store/elderStore';
 
 interface ElderCardListProps {

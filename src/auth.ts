@@ -1,9 +1,11 @@
+'use server';
+
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { compare } from 'bcrypt-ts/browser';
-import type { User } from '@/app/api/definitions';
+import { User } from '@/app/api/user/types';
 import { authConfig } from './auth.config';
 
 async function getUser(email: string): Promise<User | undefined> {

@@ -9,8 +9,10 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
+    console.log(formData);
     await signIn('credentials', formData);
   } catch (error) {
+    console.log('error', error);
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
