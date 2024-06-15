@@ -1,5 +1,4 @@
 export const getBloodTypeCompatibility = (bloodType: string): string => {
-  console.log(bloodType);
   const compatibility: { [blood: string]: string[] } = {
     'O-': ['O-'],
     'O+': ['O-', 'O+'],
