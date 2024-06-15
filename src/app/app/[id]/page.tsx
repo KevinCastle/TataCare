@@ -16,6 +16,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { getBloodTypeCompatibility, getAge, getBirthdate } from '@/app/utils';
 import { useAllergyStore } from '@/app/store/allergyStore';
+import { useDiseaseStore } from '@/app/store/diseaseStore';
 import Card from '../../components/card';
 
 function Page() {
@@ -31,12 +32,18 @@ function Page() {
     allergies: state.allergies,
   }));
 
+  const { getDiseases, diseases } = useDiseaseStore((state) => ({
+    getDiseases: state.get,
+    diseases: state.diseases,
+  }));
+
   useEffect(() => {
     if (!elder && elderId) {
       getElder(elderId);
       getAllergies(elderId);
+      getDiseases(elderId);
     }
-  }, [elder, elderId, getElder, getAllergies]);
+  }, [elder, elderId, getElder, getAllergies, getDiseases]);
 
   return (
     <>
@@ -101,9 +108,13 @@ function Page() {
               <div className="flex gap-1 mb-5">
                 <Prescription size={20} color="#C20E4D" className="mt-1" />
                 <div>
-                  <p className="text-lg font-medium text-zinc-900">Linfoma de Hodkins</p>
-                  <p className="text-lg font-medium text-zinc-900">Diabetes</p>
-                  <p className="text-lg font-medium text-zinc-900">Hipertensión</p>
+                  {diseases && diseases.length > 0 ? (
+                    diseases.map((disease) => (
+                      <p key={disease.id} className="text-lg font-medium text-zinc-900">{`${disease.name} ${disease.detail}`}</p>
+                    ))
+                  ) : (
+                    <p className="text-lg font-medium text-zinc-900">No tiene enfermedades registradas</p>
+                  )}
                 </div>
               </div>
             </div>
