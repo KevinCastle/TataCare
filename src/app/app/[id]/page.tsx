@@ -18,6 +18,7 @@ import { getBloodTypeCompatibility, getAge, getBirthdate } from '@/app/utils';
 import { useAllergyStore } from '@/app/store/allergyStore';
 import { useDiseaseStore } from '@/app/store/diseaseStore';
 import { useMedicationStore } from '@/app/store/medicationStore';
+import { useContactStore } from '@/app/store/contactStore';
 import Card from '../../components/card';
 
 function Page() {
@@ -43,14 +44,38 @@ function Page() {
     medications: state.medications,
   }));
 
+  const { getContacts, contacts } = useContactStore((state) => ({
+    getContacts: state.get,
+    contacts: state.contacts,
+  }));
+
   useEffect(() => {
     if (!elder && elderId) {
       getElder(elderId);
       getAllergies(elderId);
       getDiseases(elderId);
       getMedications(elderId);
+      getContacts(elderId);
     }
-  }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications]);
+  }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications, getContacts]);
+
+  function getConditions(isPresented : boolean) {
+    if (!elder) return [];
+
+    const conditions = [
+      { label: 'Diabetes', is_presented: elder.diabetic },
+      { label: 'Hipertensión', is_presented: elder.hypertensive },
+      { label: 'Problemas renales', is_presented: elder.kidney_failure },
+      { label: 'Incontinencia urinaria', is_presented: elder.urinary_incontinence },
+    ];
+
+    return conditions.reduce((acc: string[], condition) => {
+      if (condition.is_presented === isPresented) {
+        acc.push(condition.label);
+      }
+      return acc;
+    }, []);
+  }
 
   return (
     <>
@@ -160,8 +185,9 @@ function Page() {
               <div className="flex gap-1 mb-5">
                 <SealWarning size={20} color="#F5A524" className="mt-1" />
                 <div>
-                  <p className="text-lg font-medium text-zinc-900">Hipertensión</p>
-                  <p className="text-lg font-medium text-zinc-900">Diabetes</p>
+                  {getConditions(true).map((condition) => (
+                    <p key={condition} className="text-lg font-medium text-zinc-900">{condition}</p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -170,8 +196,9 @@ function Page() {
               <div className="flex gap-1 mb-5">
                 <FirstAid size={20} color="#17C964" className="mt-1" />
                 <div>
-                  <p className="text-lg font-medium text-zinc-900">Problemas renales</p>
-                  <p className="text-lg font-medium text-zinc-900">Incontinencia urinaria</p>
+                  {getConditions(false).map((condition) => (
+                    <p key={condition} className="text-lg font-medium text-zinc-900">{condition}</p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -187,21 +214,21 @@ function Page() {
                 <p className="font-medium text-zinc-600">Nacionalidad</p>
                 <div className="flex items-center">
                   <Flag size={20} color="#006FEE" />
-                  <p className="text-lg font-medium text-zinc-900 ms-1">Chileno</p>
+                  <p className="text-lg font-medium text-zinc-900 ms-1">{elder.nationality}</p>
                 </div>
               </div>
               <div id="identification" className="mb-5">
                 <p className="font-medium text-zinc-600">Identificación</p>
                 <div className="flex items-center">
                   <IdentificationCard size={20} color="#006FEE" />
-                  <p className="text-lg font-medium text-zinc-900 ms-1">11.111.111-1</p>
+                  <p className="text-lg font-medium text-zinc-900 ms-1">{elder.identification_number}</p>
                 </div>
               </div>
               <div id="insurance" className="mb-5">
                 <p className="font-medium text-zinc-600">Previsión</p>
                 <div className="flex items-center">
                   <Ambulance size={20} color="#006FEE" />
-                  <p className="text-lg font-medium text-zinc-900 ms-1">Fonasa</p>
+                  <p className="text-lg font-medium text-zinc-900 ms-1">{elder.insurance}</p>
                 </div>
               </div>
             </Card>
@@ -211,27 +238,35 @@ function Page() {
               title="Contacto de emergencia"
               icon={<Heartbeat size={32} weight="bold" color="#F31260" />}
             >
-              <div id="nacionality" className="mb-5">
-                <p className="font-medium text-zinc-600">Doctor</p>
-                <div className="flex items-center">
-                  <UserSquare size={20} color="#006FEE" />
-                  <p className="text-lg font-medium text-zinc-900 ms-1">María Lourdes Pereira</p>
-                </div>
-              </div>
-              <div id="identification" className="mb-5">
-                <p className="font-medium text-zinc-600">Contacto</p>
-                <div className="flex items-center">
-                  <Phone size={20} color="#006FEE" />
-                  <p className="text-lg font-medium text-zinc-900 ms-1">+56 9 1234 5678</p>
-                </div>
-              </div>
-              <div id="prevision" className="mb-5">
-                <p className="font-medium text-zinc-600">Dirección</p>
-                <div className="flex items-center">
-                  <MapPinSimple size={20} color="#006FEE" />
-                  <p className="text-lg font-medium text-zinc-900 ms-1">Av. Nueva Lyon 7777</p>
-                </div>
-              </div>
+              {contacts && contacts.length > 0 ? (
+                contacts.map((contact) => (
+                  <div key={contact.id}>
+                    <div id="nacionality" className="mb-5">
+                      <p className="font-medium text-zinc-600">Doctor</p>
+                      <div className="flex items-center">
+                        <UserSquare size={20} color="#006FEE" />
+                        <p className="text-lg font-medium text-zinc-900 ms-1">{contact.name}</p>
+                      </div>
+                    </div>
+                    <div id="identification" className="mb-5">
+                      <p className="font-medium text-zinc-600">Número de teléfono</p>
+                      <div className="flex items-center">
+                        <Phone size={20} color="#006FEE" />
+                        <p className="text-lg font-medium text-zinc-900 ms-1">{contact.phone}</p>
+                      </div>
+                    </div>
+                    <div id="prevision" className="mb-5">
+                      <p className="font-medium text-zinc-600">Dirección</p>
+                      <div className="flex items-center">
+                        <MapPinSimple size={20} color="#006FEE" />
+                        <p className="text-lg font-medium text-zinc-900 ms-1">{contact.address}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-lg font-medium text-zinc-900">No hay contactos de emergencia registrados</p>
+              )}
             </Card>
           </section>
         </div>
