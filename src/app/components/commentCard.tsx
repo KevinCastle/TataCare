@@ -17,23 +17,23 @@ const commentCard: React.FC<CommentProps> = ({
     </CardHeader>
     <Divider />
     <CardBody className="grid grid-cols-5">
-      <div className="col-span-1">
+      <div className="col-span-5 lg:col-span-1 mb-3 lg:mb-0">
         <p>Día</p>
         <p>{comment.day_rating}</p>
       </div>
-      <div className="col-span-1">
+      <div className="col-span-5 lg:col-span-1 mb-3 lg:mb-0">
         <p>Emoción</p>
         <p>{comment.day_rating}</p>
       </div>
-      <div className="col-span-1">
+      <div className="col-span-5 lg:col-span-1 mb-3 lg:mb-0">
         <p>Físico</p>
         <p>{comment.physical_activity ? 'Sí' : 'No'}</p>
       </div>
-      <div className="col-span-1">
+      <div className="col-span-5 lg:col-span-1 mb-3 lg:mb-0">
         <p>Digestión</p>
         <p>{comment.digestion_rating}</p>
       </div>
-      <div className="col-span-1">
+      <div className="col-span-5 lg:col-span-1 mb-3 lg:mb-0">
         <p>Fecha</p>
         <p>{formatDateTime(comment.date)}</p>
       </div>
