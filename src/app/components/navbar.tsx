@@ -19,7 +19,7 @@ export default function Navbar() {
   }, [getUser, user]);
 
   return (
-    <div className="flex flex-col px-3 py-4 lg:px-2 lg:h-svh">
+    <div className="bg-white flex flex-col px-3 py-4 lg:px-2 lg:h-full">
       <div className="flex justify-between items-center lg:justify-start">
         <Link
           className="mb-2 flex border-b border-solid border-zinc-100 py-4 px-3"

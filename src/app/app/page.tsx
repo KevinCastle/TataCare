@@ -15,7 +15,7 @@ function Page() {
   }, [getAll]);
 
   return (
-    <main className="bg-zinc-200 min-h-svh relative">
+    <main className="bg-zinc-200 min-h-full relative">
       <article className="h-full py-4">
         <section className="row-span-1 flex items-center justify-center h-[25vh]">
           <h1 className="text-3xl text-center">Lista de abuelitos</h1>
