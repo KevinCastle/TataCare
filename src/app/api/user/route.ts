@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
 
       if (!session?.user) return null;
 
-      console.log(session.user);
       return Response.json(session?.user);
     }
     const data = await sql`SELECT * FROM users WHERE email=${email}`;

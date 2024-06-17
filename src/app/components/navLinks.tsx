@@ -28,14 +28,14 @@ export default function NavLinks({ id }: { id: string }) {
             key={link.name}
             href={`/app/${id}${link.href}`}
             className={clsx(
-              'flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-sky-100 md:flex-none md:justify-start md:p-2 md:px-3',
+              'flex flex-col lg:flex-row lg:h-[48px] grow items-center justify-start gap-2 rounded-lg p-2 xs:p-3 hover:bg-sky-100 lg:flex-none lg:justify-start lg:p-2 lg:px-3',
               {
                 'bg-sky-100': pathname === link.href,
               },
             )}
           >
-            <LinkIcon size={24} className="mr-2" color="#006FEE" />
-            <p className={clsx('text-lg font-medium text-zinc-900', { 'text-blue-600': pathname === link.href })}>
+            <LinkIcon size={24} className="lg:mr-2" color="#006FEE" />
+            <p className={clsx('text-sm lg:text-lg font-medium text-center lg:text-start text-zinc-900', { 'text-blue-600': pathname === link.href })}>
               {link.name}
             </p>
           </Link>
