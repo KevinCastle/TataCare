@@ -10,16 +10,16 @@ import {
   Virus,
   MapPinSimple,
   Prescription,
+  ChatCircle,
 } from '@phosphor-icons/react/dist/ssr';
-import { useElderStore } from '@/app/store/elderStore';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { getBloodTypeCompatibility, getAge, getBirthdate } from '@/app/utils';
-import { useAllergyStore } from '@/app/store/allergyStore';
-import { useDiseaseStore } from '@/app/store/diseaseStore';
-import { useMedicationStore } from '@/app/store/medicationStore';
-import { useContactStore } from '@/app/store/contactStore';
+import {
+  useElderStore, useAllergyStore, useDiseaseStore, useMedicationStore, useContactStore, useCommentStore,
+} from '@/app/store';
 import Card from '../../components/card';
+import CommentCard from '../../components/commentCard';
 
 function Page() {
   const pathname = usePathname();
@@ -49,6 +49,11 @@ function Page() {
     contacts: state.contacts,
   }));
 
+  const { getLastComment, lastComment } = useCommentStore((state) => ({
+    getLastComment: state.getLast,
+    lastComment: state.lastComment,
+  }));
+
   useEffect(() => {
     if (!elder && elderId) {
       getElder(elderId);
@@ -56,8 +61,9 @@ function Page() {
       getDiseases(elderId);
       getMedications(elderId);
       getContacts(elderId);
+      getLastComment(elderId);
     }
-  }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications, getContacts]);
+  }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications, getContacts, getLastComment]);
 
   function getConditions(isPresented : boolean) {
     if (!elder) return [];
@@ -85,7 +91,7 @@ function Page() {
       </header>
       {!elder && <p>Cargando...</p>}
       {elder && (
-      <article className="grid grid-cols-12 grid-rows-2 gap-4">
+      <article className="grid grid-cols-12 grid-rows-3 gap-4">
         <section id="personal-data" className="col-span-7 row-span-1">
           <Card
             avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
@@ -270,6 +276,17 @@ function Page() {
             </Card>
           </section>
         </div>
+        <section id="last-comment-data" className="col-span-12 row-span-1 mt-4">
+          {lastComment && (
+            <>
+              <div className="flex items-center mb-4">
+                <ChatCircle color="#006FEE" size={32} className="mr-2" />
+                <p className="text-2xl font-medium">Último comentario</p>
+              </div>
+              <CommentCard comment={lastComment} />
+            </>
+          )}
+        </section>
       </article>
       )}
     </>
