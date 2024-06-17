@@ -2,11 +2,22 @@
 
 import { Avatar, Link } from '@nextui-org/react';
 import { ArrowUUpLeft } from '@phosphor-icons/react/dist/ssr';
+import { useEffect } from 'react';
 import NavLinks from './navLinks';
 import Logo from './logo';
 import SignOutButton from './signOutButton';
+import { useUserStore } from '../store/userStore';
 
 export default function Navbar() {
+  const { getUser, user } = useUserStore((state) => ({
+    getUser: state.get,
+    user: state.user,
+  }));
+
+  useEffect(() => {
+    if (!user) getUser();
+  }, [getUser, user]);
+
   return (
     <div className="flex flex-col px-3 py-4 md:px-2 md:h-svh">
       <Link
@@ -26,7 +37,7 @@ export default function Navbar() {
       </div>
       <div className="flex items-center gap-x-3 p-2 pt-4">
         <Avatar showFallback src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
-        <p className="font-medium">Kevin Castillo</p>
+        <p className="font-medium">{user?.name}</p>
         <SignOutButton />
       </div>
     </div>
