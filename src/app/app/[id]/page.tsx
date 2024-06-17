@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 import { getBloodTypeCompatibility, getAge, getBirthdate } from '@/app/utils';
 import { useAllergyStore } from '@/app/store/allergyStore';
 import { useDiseaseStore } from '@/app/store/diseaseStore';
+import { useMedicationStore } from '@/app/store/medicationStore';
 import Card from '../../components/card';
 
 function Page() {
@@ -37,13 +38,19 @@ function Page() {
     diseases: state.diseases,
   }));
 
+  const { getMedications, medications } = useMedicationStore((state) => ({
+    getMedications: state.get,
+    medications: state.medications,
+  }));
+
   useEffect(() => {
     if (!elder && elderId) {
       getElder(elderId);
       getAllergies(elderId);
       getDiseases(elderId);
+      getMedications(elderId);
     }
-  }, [elder, elderId, getElder, getAllergies, getDiseases]);
+  }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications]);
 
   return (
     <>
@@ -123,8 +130,13 @@ function Page() {
               <div className="flex gap-1 mb-5">
                 <Pill size={20} color="#006FEE" className="mt-1" />
                 <div>
-                  <p className="text-lg font-medium text-zinc-900">Metformina</p>
-                  <p className="text-lg font-medium text-zinc-900">Sulfonilureas</p>
+                  {medications && medications.length > 0 ? (
+                    medications.map((medication) => (
+                      <p key={medication.id} className="text-lg font-medium text-zinc-900">{`${medication.name} ${medication.quantity}`}</p>
+                    ))
+                  ) : (
+                    <p className="text-lg font-medium text-zinc-900">No tiene medicamentos registrados</p>
+                  )}
                 </div>
               </div>
             </div>
