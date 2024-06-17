@@ -1,7 +1,10 @@
+'use client';
+
 import { Avatar, Link } from '@nextui-org/react';
-import { ArrowUUpLeft, CaretRight } from '@phosphor-icons/react/dist/ssr';
+import { ArrowUUpLeft } from '@phosphor-icons/react/dist/ssr';
 import NavLinks from './navLinks';
 import Logo from './logo';
+import SignOutButton from './signOutButton';
 
 export default function Navbar() {
   return (
@@ -24,9 +27,7 @@ export default function Navbar() {
       <div className="flex items-center gap-x-3 p-2 pt-4">
         <Avatar showFallback src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
         <p className="font-medium">Kevin Castillo</p>
-        <div className="bg-zinc-100 rounded-full p-2 ml-auto">
-          <CaretRight size={16} color="black" />
-        </div>
+        <SignOutButton />
       </div>
     </div>
   );
