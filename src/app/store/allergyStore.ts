@@ -29,7 +29,7 @@ export const useAllergyStore = create<AllergyStore>((set) => ({
       const allergies = await response.json();
       set({ allergies });
     } catch (error) {
-      console.error('Failed to fetch allergy:', error);
+      throw new Error('Failed to fetch allergy:');
     }
   },
   add: async (allergy: Allergy) => {
@@ -45,7 +45,7 @@ export const useAllergyStore = create<AllergyStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update allergy:', error);
+      throw new Error('Failed to update allergy:');
     }
   },
   remove: async (allergy: Allergy) => {
@@ -62,7 +62,7 @@ export const useAllergyStore = create<AllergyStore>((set) => ({
       }
       await get(allergy.elder_id);
     } catch (error) {
-      console.error('Failed to update allergy:', error);
+      throw new Error('Failed to update allergy:');
     }
   },
 }));

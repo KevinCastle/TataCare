@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     const comments = data.rows;
     return Response.json(comments);
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to fetch comments.');
   }
 }
@@ -39,7 +38,6 @@ export async function PUT(request: Request) {
 
     return result.rows[0] as Comment;
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to create comment.');
   }
 }
@@ -55,7 +53,6 @@ export async function DELETE(request: NextRequest) {
     `;
     return Response.json({ message: `Comment ${id} deleted successfully` });
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to delete comment.');
   }
 }

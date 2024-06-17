@@ -33,7 +33,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       const elders = await response.json();
       set({ elders });
     } catch (error) {
-      console.error('Failed to fetch elders:', error);
+      throw new Error('Failed to fetch elders:');
     }
   },
   getElder: async (id: string) => {
@@ -45,7 +45,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       const elder = await response.json();
       set({ selectedElder: elder });
     } catch (error) {
-      console.error('Failed to update elder:', error);
+      throw new Error('Failed to update elder:');
     }
   },
   add: async (id: string, elder: Elder) => {
@@ -61,7 +61,7 @@ export const useElderStore = create<ElderStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update elder:', error);
+      throw new Error('Failed to update elder:');
     }
   },
   edit: async (id: string, elder: Elder) => {
@@ -77,7 +77,7 @@ export const useElderStore = create<ElderStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update elder:', error);
+      throw new Error('Failed to update elder:');
     }
   },
   remove: async (id: string) => {
@@ -92,7 +92,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       set({ selectedElder: elder });
       await redirect('/app');
     } catch (error) {
-      console.error('Failed to update elder:', error);
+      throw new Error('Failed to update elder:');
     }
   },
 }));

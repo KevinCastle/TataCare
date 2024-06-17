@@ -31,7 +31,7 @@ export const useUserStore = create<UserStore>((set) => ({
       const user = await response.json();
       set({ user });
     } catch (error) {
-      console.error('Failed to fetch user:', error);
+      throw new Error('Failed to fetch user:');
     }
   },
 }));

@@ -32,7 +32,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
       const comments = await response.json();
       set({ comments });
     } catch (error) {
-      console.error('Failed to fetch comment:', error);
+      throw new Error('Failed to fetch comment:');
     }
   },
   getLast: async (elderId) => {
@@ -44,7 +44,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
       const lastComment = await response.json();
       set({ lastComment });
     } catch (error) {
-      console.error('Failed to fetch comment:', error);
+      throw new Error('Failed to fetch comment:');
     }
   },
   add: async (comment: Comment) => {
@@ -60,7 +60,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update comment:', error);
+      throw new Error('Failed to update comment:');
     }
   },
   remove: async (comment: Comment) => {
@@ -77,7 +77,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
       }
       await get(comment.elder_id);
     } catch (error) {
-      console.error('Failed to update comment:', error);
+      throw new Error('Failed to update comment:');
     }
   },
 }));

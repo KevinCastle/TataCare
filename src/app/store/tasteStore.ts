@@ -29,7 +29,7 @@ export const useTasteStore = create<TasteStore>((set) => ({
       const tastes = await response.json();
       set({ tastes });
     } catch (error) {
-      console.error('Failed to fetch taste:', error);
+      throw new Error('Failed to fetch taste:');
     }
   },
   add: async (taste: Taste) => {
@@ -45,7 +45,7 @@ export const useTasteStore = create<TasteStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update taste:', error);
+      throw new Error('Failed to update taste:');
     }
   },
   remove: async (taste: Taste) => {
@@ -62,7 +62,7 @@ export const useTasteStore = create<TasteStore>((set) => ({
       }
       await get(taste.elder_id);
     } catch (error) {
-      console.error('Failed to update taste:', error);
+      throw new Error('Failed to update taste:');
     }
   },
 }));

@@ -18,7 +18,6 @@ export async function GET(request: NextRequest) {
     const user = data.rows[0] as User;
     return Response.json(user);
   } catch (error) {
-    console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
   }
 }

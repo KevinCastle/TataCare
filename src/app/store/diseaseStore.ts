@@ -29,7 +29,7 @@ export const useDiseaseStore = create<DiseaseStore>((set) => ({
       const diseases = await response.json();
       set({ diseases });
     } catch (error) {
-      console.error('Failed to fetch disease:', error);
+      throw new Error('Failed to fetch disease:');
     }
   },
   add: async (disease: Disease) => {
@@ -45,7 +45,7 @@ export const useDiseaseStore = create<DiseaseStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update disease:', error);
+      throw new Error('Failed to update disease:');
     }
   },
   remove: async (disease: Disease) => {
@@ -62,7 +62,7 @@ export const useDiseaseStore = create<DiseaseStore>((set) => ({
       }
       await get(disease.elder_id);
     } catch (error) {
-      console.error('Failed to update disease:', error);
+      throw new Error('Failed to update disease:');
     }
   },
 }));

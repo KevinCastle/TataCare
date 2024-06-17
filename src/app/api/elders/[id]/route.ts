@@ -9,7 +9,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const elder = data.rows[0] as Elder;
     return Response.json(elder);
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to fetch elder.');
   }
 }
@@ -30,7 +29,6 @@ export async function PUT(request: Request) {
 
     return result.rows[0] as Elder;
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to create elder.');
   }
 }
@@ -54,7 +52,6 @@ export async function POST(request: Request) {
 
     return result.rows[0] as Elder;
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to create elder.');
   }
 }
@@ -68,7 +65,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     `;
     return Response.json({ message: `Elder ${params.id} deleted successfully` });
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to delete elder.');
   }
 }

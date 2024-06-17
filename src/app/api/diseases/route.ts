@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
     const diseases = data.rows;
     return Response.json(diseases);
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to fetch diseases.');
   }
 }
@@ -33,7 +32,6 @@ export async function PUT(request: Request) {
 
     return result.rows[0] as Disease;
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to create disease.');
   }
 }
@@ -49,7 +47,6 @@ export async function DELETE(request: NextRequest) {
     `;
     return Response.json({ message: `Disease ${id} deleted successfully` });
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to delete disease.');
   }
 }

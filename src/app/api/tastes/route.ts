@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
     const tastes = data.rows;
     return Response.json(tastes);
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to fetch tastes.');
   }
 }
@@ -33,7 +32,6 @@ export async function PUT(request: Request) {
 
     return result.rows[0] as Taste;
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to create taste.');
   }
 }
@@ -49,7 +47,6 @@ export async function DELETE(request: NextRequest) {
     `;
     return Response.json({ message: `Taste ${id} deleted successfully` });
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to delete taste.');
   }
 }

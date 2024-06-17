@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
     const contacts = data.rows;
     return Response.json(contacts);
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to fetch contacts.');
   }
 }
@@ -33,7 +32,6 @@ export async function PUT(request: Request) {
 
     return result.rows[0] as Contact;
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to create contact.');
   }
 }
@@ -49,7 +47,6 @@ export async function DELETE(request: NextRequest) {
     `;
     return Response.json({ message: `Contact ${id} deleted successfully` });
   } catch (err) {
-    console.error('Database Error:', err);
     throw new Error('Failed to delete contact.');
   }
 }

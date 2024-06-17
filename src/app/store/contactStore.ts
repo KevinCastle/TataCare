@@ -29,7 +29,7 @@ export const useContactStore = create<ContactStore>((set) => ({
       const contacts = await response.json();
       set({ contacts });
     } catch (error) {
-      console.error('Failed to fetch contact:', error);
+      throw new Error('Failed to fetch contact:');
     }
   },
   add: async (contact: Contact) => {
@@ -45,7 +45,7 @@ export const useContactStore = create<ContactStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update contact:', error);
+      throw new Error('Failed to update contact:');
     }
   },
   remove: async (contact: Contact) => {
@@ -62,7 +62,7 @@ export const useContactStore = create<ContactStore>((set) => ({
       }
       await get(contact.elder_id);
     } catch (error) {
-      console.error('Failed to update contact:', error);
+      throw new Error('Failed to update contact:');
     }
   },
 }));

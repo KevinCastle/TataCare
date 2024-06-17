@@ -29,7 +29,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       const medications = await response.json();
       set({ medications });
     } catch (error) {
-      console.error('Failed to fetch medication:', error);
+      throw new Error('Failed to fetch medication:');
     }
   },
   add: async (medication: Medication) => {
@@ -45,7 +45,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      console.error('Failed to update medication:', error);
+      throw new Error('Failed to update medication:');
     }
   },
   remove: async (medication: Medication) => {
@@ -62,7 +62,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       }
       await get(medication.elder_id);
     } catch (error) {
-      console.error('Failed to update medication:', error);
+      throw new Error('Failed to update medication:');
     }
   },
 }));
