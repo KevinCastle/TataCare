@@ -30,7 +30,9 @@ export async function PUT(request: Request) {
         VALUES (${values})
     `;
 
-    return result.rows[0] as Disease;
+    return new Response(JSON.stringify(result.rows[0]), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (err) {
     throw new Error('Failed to create disease.');
   }

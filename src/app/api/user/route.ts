@@ -10,14 +10,25 @@ export async function GET(request: NextRequest) {
     if (!email) {
       const session = await auth();
 
-      if (!session?.user) return null;
+      if (!session?.user) {
+        return new Response('User not found', { status: 404 });
+      }
 
-      return Response.json(session?.user);
+      return new Response(JSON.stringify(session.user), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
     const data = await sql`SELECT * FROM users WHERE email=${email}`;
+    if (data.rowCount === 0) {
+      return new Response('User not found', { status: 404 });
+    }
     const user = data.rows[0] as User;
-    return Response.json(user);
+    return new Response(JSON.stringify(user), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
-    throw new Error('Failed to fetch user.');
+    return new Response('Failed to fetch user.', { status: 500 });
   }
 }

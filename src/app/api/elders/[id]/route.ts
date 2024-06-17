@@ -27,7 +27,9 @@ export async function PUT(request: Request) {
         VALUES (${values})
     `;
 
-    return result.rows[0] as Elder;
+    return new Response(JSON.stringify(result.rows[0]), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (err) {
     throw new Error('Failed to create elder.');
   }
@@ -50,7 +52,9 @@ export async function POST(request: Request) {
       WHERE id=${id}
     `;
 
-    return result.rows[0] as Elder;
+    return new Response(JSON.stringify(result.rows[0]), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (err) {
     throw new Error('Failed to create elder.');
   }
