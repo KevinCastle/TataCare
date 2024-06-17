@@ -6,9 +6,9 @@ export default function Logo({ textWhite = false, iconColor = '006FEE' }) {
       className="flex items-center"
     >
       <div>
-        <UsersThree color={iconColor} size={40} className="mr-2" />
+        <UsersThree color={iconColor} size={40} className="h-auto w-8 sm:w-10 mr-2" />
       </div>
-      <p className={`text-4xl font-medium ${textWhite ? 'text-white' : 'text-zinc-900'}`}>Tatacare</p>
+      <p className={`text-2xl sm:text-4xl font-medium ${textWhite ? 'text-white' : 'text-zinc-900'}`}>Tatacare</p>
     </div>
   );
 }
