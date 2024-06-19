@@ -5,7 +5,7 @@ import {
   Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure,
 } from '@nextui-org/react';
 import { Trash } from '@phosphor-icons/react/dist/ssr';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   useCommentStore, useContactStore, useElderStore, useMedicationStore, useTasteStore,
 } from '../store';
@@ -19,6 +19,7 @@ export default function DeleteModal({ id, type }: DeleteModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [elderId, setElderId] = useState<string>('');
   const pathname = usePathname();
+  const router = useRouter();
 
   const { removeElder } = useElderStore((state) => ({
     removeElder: state.remove,
@@ -52,6 +53,7 @@ export default function DeleteModal({ id, type }: DeleteModalProps) {
     switch (type) {
       case 'elder': {
         removeElder(elderId);
+        router.push('/app');
         break;
       }
       case 'medication': {

@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { redirect } from 'next/navigation';
 import { Elder } from '../api/elders/types';
 
 type ElderState = {
@@ -88,11 +87,9 @@ export const useElderStore = create<ElderStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const elder = await response.json();
-      set({ selectedElder: elder });
-      await redirect('/app');
+      set({ selectedElder: null });
     } catch (error) {
-      throw new Error('Failed to update elder:');
+      throw new Error('Failed to update elder');
     }
   },
 }));
