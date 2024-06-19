@@ -97,6 +97,9 @@ function Page() {
             <Card
               avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
               title={`${elder.name} ${elder.surname}`}
+              type="elder"
+              action="delete"
+              id={elder.id}
             >
               <div className="grid grid-cols-2 gap-5">
                 <div id="sex" className="col-span-2 row-span-1">

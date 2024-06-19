@@ -3,16 +3,17 @@ import {
   CardFooter,
 } from '@nextui-org/react';
 import { ReactNode } from 'react';
-import ActionButton from './actionButton';
+import EditModal from './editModal';
+import LikeButton from './likeButton';
+import DeleteModal from './deleteModal';
 
 interface CardProps {
     title?: string;
     avatar?: string;
     icon?: ReactNode;
-    type?: 'user' | 'medicine' | 'taste' | 'contact' | 'comment' | undefined;
-    edit?: () => void;
-    erase?: () => void;
-    like?: () => void;
+    type?: 'elder' | 'medication' | 'taste' | 'contact' | 'comment';
+    action?: 'edit' | 'delete' | 'like';
+    id?: string;
     children: ReactNode;
     footerContent?: ReactNode;
 }
@@ -22,9 +23,8 @@ const card: React.FC<CardProps> = ({
   avatar,
   icon,
   type,
-  edit,
-  erase,
-  like,
+  action,
+  id,
   children,
   footerContent,
 }) => (
@@ -35,9 +35,9 @@ const card: React.FC<CardProps> = ({
         {icon && !avatar && icon}
       <p className="text-xl font-medium">{title}</p>
       <div className="ml-auto">
-        {edit && <ActionButton action="edit" type={type} />}
-        {erase && <ActionButton action="erase" type={type} />}
-        {like && <ActionButton action="like" type={type} />}
+        {action === 'edit' && type && id && <EditModal type={type} />}
+        {action === 'like' && type && <LikeButton type={type} />}
+        {action === 'delete' && type && id && <DeleteModal id={id} type={type} />}
       </div>
 
     </CardHeader>
