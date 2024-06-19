@@ -84,7 +84,7 @@ function Page() {
   }
 
   return (
-    <main className="h-[calc(100vh-64px)] overflow-y-auto relative">
+    <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] overflow-y-auto relative">
       <header className="flex items-center mb-4 pt-10">
         <IdentificationCard color="#006FEE" size={32} className="mr-2" />
         <p className="text-2xl font-medium">Ficha</p>
