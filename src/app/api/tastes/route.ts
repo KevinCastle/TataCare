@@ -38,6 +38,33 @@ export async function PUT(request: Request) {
   }
 }
 
+export async function POST(request: NextRequest) {
+  noStore();
+
+  try {
+    const requestBody = await request.json();
+    const { taste } = requestBody;
+    const { searchParams } = request.nextUrl;
+    const elderId = searchParams.get('elderId');
+
+    const { id, ...tasteData } = taste;
+    const keys = Object.keys(tasteData);
+    const values = Object.values(tasteData);
+    const updates = keys.map((key, index) => `${key} = ${values[index]}`).join(', ');
+    const result = await sql<Taste>`
+      UPDATE taste
+      SET ${updates}
+      WHERE elder_id=${elderId} AND id=${id}
+    `;
+
+    return new Response(JSON.stringify(result.rows[0]), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (err) {
+    throw new Error('Failed to edit taste.');
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   noStore();
   try {

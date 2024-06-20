@@ -9,6 +9,7 @@ type MedicationState = {
 type MedicationActions = {
     get: (elderId: string) => void,
     add: (medication: Medication) => void,
+    edit: (elderId: string, medication: Medication) => void,
     remove: (medication: Medication) => void
 }
 
@@ -29,7 +30,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       const medications = await response.json();
       set({ medications });
     } catch (error) {
-      throw new Error('Failed to fetch medication:');
+      throw new Error('Failed to fetch medication');
     }
   },
   add: async (medication: Medication) => {
@@ -45,7 +46,23 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      throw new Error('Failed to update medication:');
+      throw new Error('Failed to update medication');
+    }
+  },
+  edit: async (elderId: string, medication: Medication) => {
+    try {
+      const response = await fetch(`/api/medications?elderId=${elderId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(medication),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      throw new Error('Failed to update medication');
     }
   },
   remove: async (medication: Medication) => {
@@ -62,7 +79,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       }
       await get(medication.elder_id);
     } catch (error) {
-      throw new Error('Failed to update medication:');
+      throw new Error('Failed to update medication');
     }
   },
 }));

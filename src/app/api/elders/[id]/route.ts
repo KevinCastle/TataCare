@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to create elder.');
+    throw new Error('Failed to edit elder.');
   }
 }
 
