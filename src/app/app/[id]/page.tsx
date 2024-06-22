@@ -171,7 +171,7 @@ function Page() {
                   <div>
                     {medications && medications.length > 0 ? (
                       medications.map((medication) => (
-                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} ${medication.quantity}`}</p>
+                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} ${medication.quantity}${medication.weight}`}</p>
                       ))
                     ) : (
                       <p className="text-lg font-medium text-zinc-900 text-pretty">No tiene medicamentos registrados</p>

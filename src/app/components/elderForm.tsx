@@ -164,7 +164,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">¿Está seguro?</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">{elder ? 'Editar abuelito' : 'Registrar abuelito'}</ModalHeader>
             <ModalBody>
               <form className="flex flex-col gap-y-5">
                 <Input
