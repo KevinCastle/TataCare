@@ -13,28 +13,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request) {
-  noStore();
-  try {
-    const requestBody = await request.json();
-    const { elder } = requestBody;
-
-    const keys = Object.keys(elder).join(', ');
-    const values = Object.values(elder).join(', ');
-
-    const result = await sql<Elder>`
-      INSERT INTO elders (${keys})
-        VALUES (${values})
-    `;
-
-    return new Response(JSON.stringify(result.rows[0]), {
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (err) {
-    throw new Error('Failed to create elder.');
-  }
-}
-
 export async function POST(request: Request) {
   noStore();
 

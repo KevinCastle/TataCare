@@ -10,6 +10,7 @@ import {
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 import { DateValue, parseDate } from '@internationalized/date';
+import { v4 } from 'uuid';
 import { bloodTypes } from '../utils';
 import { previsions } from '../utils/PrevisionsUtils';
 import { useElderStore } from '../store';
@@ -29,6 +30,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
   const [healthPrevision, setHealthPrevision] = useState<Selection>(new Set([]));
   const [conditions, setConditions] = useState<string[]>([]);
   const [countries, setCountries] = useState<Selection>(new Set([]));
+  const [error, setError] = useState<string>('');
   const genres = [
     {
       key: 'masculino',
@@ -40,16 +42,57 @@ export default function ElderForm({ elderId }: ElderFormProps) {
     },
   ];
 
-  const { getElder, editElder, selectedElder: elder } = useElderStore((state) => ({
+  const {
+    getElder, editElder, addElder, selectedElder: elder,
+  } = useElderStore((state) => ({
     getElder: state.getElder,
+    addElder: state.add,
     editElder: state.edit,
     selectedElder: state.selectedElder,
   }));
 
-  const editResume = () => {
-    if (!elder) return;
+  function validateForm() {
+    // Check for empty or null values
+    if (!name.trim()) {
+      setError('El nombre es requerido.');
+      return false;
+    }
+    if (!surName.trim()) {
+      setError('El apellido es requerido.');
+      return false;
+    }
+    if (!birthDate || birthDate.toString().length === 0) {
+      setError('La fecha de nacimiento es requerida.');
+      return false;
+    }
+    if (Array.from(genre)[0] as string === '') {
+      setError('El sexo es requerido.');
+      return false;
+    }
+    if (Array.from(bloodType)[0] as string === '') {
+      setError('El tipo de sangre es requerido.');
+      return false;
+    }
+    if (Array.from(nationality)[0] as string === '') {
+      setError('La nacionalidad es requerida.');
+      return false;
+    }
+    if (!identityNumber.trim()) {
+      setError('El número de identidad es requerido.');
+      return false;
+    }
+    if (Array.from(healthPrevision)[0] as string === '') {
+      setError('La previsión de salud es requerida.');
+      return false;
+    }
+
+    return true;
+  }
+
+  const submitForm = () => {
+    if (!validateForm()) return;
     const elderModified = {
-      id: elder.id,
+      id: '',
       name,
       surname: surName,
       sex: Array.from(genre)[0] as string,
@@ -64,7 +107,15 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       urinary_incontinence: conditions.includes('urinary_incontinence'),
     };
 
-    editElder(elder.id, elderModified);
+    if (elder) {
+      elderModified.id = elder.id;
+      editElder(elder.id, elderModified);
+    } else {
+      elderModified.id = v4();
+      addElder(elderModified);
+    }
+
+    // TODO: AL TERMINAR TIENE QUE CERRAR EL MODAL Y ACTUALIZAR LA LISTA DE ELDER
   };
 
   useEffect(() => {
@@ -110,7 +161,6 @@ export default function ElderForm({ elderId }: ElderFormProps) {
     }
   }, [elderId, getElder, elder, countries]);
 
-  if (!elder) return null;
   return (
     (
       <ModalContent>
@@ -214,18 +264,13 @@ export default function ElderForm({ elderId }: ElderFormProps) {
               </form>
             </ModalBody>
             <ModalFooter>
+              {error && (<p>{error}</p>)}
               <Button color="danger" variant="light" onPress={onClose}>
                 Atrás
               </Button>
-              {elderId && elder ? (
-                <Button color="primary" onPress={() => editResume()}>
-                  Guardar cambios
-                </Button>
-              ) : (
-                <Button color="primary" onPress={() => null}>
-                  Registrar
-                </Button>
-              )}
+              <Button color="primary" onPress={() => submitForm()}>
+                {elderId && elder ? 'Guardar cambios' : 'Registrar'}
+              </Button>
             </ModalFooter>
           </>
         )}

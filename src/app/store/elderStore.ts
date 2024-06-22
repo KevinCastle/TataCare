@@ -9,7 +9,7 @@ type ElderState = {
 type ElderActions = {
   getAll: () => void,
   getElder: (id: string) => void,
-  add: (id: string, elder: Elder) => void,
+  add: (elder: Elder) => void,
   edit: (id: string, elder: Elder) => void,
   remove: (id: string) => void
 }
@@ -47,9 +47,9 @@ export const useElderStore = create<ElderStore>((set) => ({
       throw new Error('Failed to update elder:');
     }
   },
-  add: async (id: string, elder: Elder) => {
+  add: async (elder: Elder) => {
     try {
-      const response = await fetch(`/api/elders/${id}`, {
+      const response = await fetch('/api/elders', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
