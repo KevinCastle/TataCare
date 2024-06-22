@@ -21,7 +21,7 @@ const defaultInitState: ElderState = {
   selectedElder: null,
 };
 
-export const useElderStore = create<ElderStore>((set) => ({
+export const useElderStore = create<ElderStore>((set, get) => ({
   ...defaultInitState,
   getAll: async () => {
     try {
@@ -59,6 +59,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().getAll();
     } catch (error) {
       throw new Error('Failed to update elder:');
     }
@@ -75,6 +76,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().getElder(id);
     } catch (error) {
       throw new Error('Failed to update elder:');
     }

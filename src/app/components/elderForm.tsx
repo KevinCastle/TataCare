@@ -114,8 +114,6 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       elderModified.id = v4();
       addElder(elderModified);
     }
-
-    // TODO: AL TERMINAR TIENE QUE CERRAR EL MODAL Y ACTUALIZAR LA LISTA DE ELDER
   };
 
   useEffect(() => {
@@ -268,7 +266,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
               <Button color="danger" variant="light" onPress={onClose}>
                 Atrás
               </Button>
-              <Button color="primary" onPress={() => submitForm()}>
+              <Button color="primary" onPress={() => { submitForm(); onClose(); }}>
                 {elderId && elder ? 'Guardar cambios' : 'Registrar'}
               </Button>
             </ModalFooter>
