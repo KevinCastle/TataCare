@@ -3,7 +3,7 @@ import {
   CardFooter,
 } from '@nextui-org/react';
 import { ReactNode } from 'react';
-import EditModal from './editModal';
+import FormModal from './formModal';
 import LikeButton from './likeButton';
 import DeleteModal from './deleteModal';
 
@@ -35,7 +35,7 @@ const card: React.FC<CardProps> = ({
         {icon && !avatar && icon}
       <p className="text-xl font-medium">{title}</p>
       <div className="ml-auto">
-        {action === 'edit' && type && id && <EditModal id={id} type={type} />}
+        {action === 'edit' && type && id && <FormModal id={id} type={type} />}
         {action === 'like' && type && <LikeButton type={type} />}
         {action === 'delete' && type && id && <DeleteModal id={id} type={type} />}
       </div>
