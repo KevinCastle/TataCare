@@ -5,8 +5,8 @@ export type Elder = {
     sex: string;
     blood_type: string;
     insurance: string;
-    diabetic: string;
-    hypertensive: string;
+    diabetic: boolean;
+    hypertensive: boolean;
     birthdate: string;
     nationality: string;
     identification_number: string;
