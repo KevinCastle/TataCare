@@ -55,13 +55,17 @@ function Page() {
   }));
 
   useEffect(() => {
-    if (!elder && elderId) {
-      getElder(elderId);
-      getAllergies(elderId);
-      getDiseases(elderId);
-      getMedications(elderId);
-      getContacts(elderId);
-      getLastComment(elderId);
+    if (elderId) {
+      if (!elder && elderId) {
+        getElder(elderId);
+      }
+      if (elder) {
+        getAllergies(elderId);
+        getDiseases(elderId);
+        getMedications(elderId);
+        getContacts(elderId);
+        getLastComment(elderId);
+      }
     }
   }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications, getContacts, getLastComment]);
 
@@ -84,7 +88,7 @@ function Page() {
   }
 
   return (
-    <main className="h-[calc(100vh-64px)] overflow-y-auto relative">
+    <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] px-4 md:px-8 relative">
       <header className="flex items-center mb-4 pt-10">
         <IdentificationCard color="#006FEE" size={32} className="mr-2" />
         <p className="text-2xl font-medium">Ficha</p>
@@ -97,6 +101,9 @@ function Page() {
             <Card
               avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
               title={`${elder.name} ${elder.surname}`}
+              type="elder"
+              action="edit"
+              id={elder.id}
             >
               <div className="grid grid-cols-2 gap-5">
                 <div id="sex" className="col-span-2 row-span-1">
@@ -164,7 +171,7 @@ function Page() {
                   <div>
                     {medications && medications.length > 0 ? (
                       medications.map((medication) => (
-                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} ${medication.quantity}`}</p>
+                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} ${medication.quantity}${medication.weight}`}</p>
                       ))
                     ) : (
                       <p className="text-lg font-medium text-zinc-900 text-pretty">No tiene medicamentos registrados</p>

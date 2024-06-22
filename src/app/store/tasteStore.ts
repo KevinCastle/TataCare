@@ -9,6 +9,7 @@ type TasteState = {
 type TasteActions = {
     get: (elderId: string) => void,
     add: (taste: Taste) => void,
+    edit: (elderId: string, taste: Taste) => void,
     remove: (taste: Taste) => void
 }
 
@@ -46,6 +47,22 @@ export const useTasteStore = create<TasteStore>((set) => ({
       }
     } catch (error) {
       throw new Error('Failed to update taste:');
+    }
+  },
+  edit: async (elderId: string, taste: Taste) => {
+    try {
+      const response = await fetch(`/api/tastes?elderId=${elderId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(taste),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      throw new Error('Failed to update elder:');
     }
   },
   remove: async (taste: Taste) => {

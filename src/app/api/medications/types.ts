@@ -4,6 +4,8 @@ export type Medication = {
     name: string;
     quantity: string;
     schedule: string;
-    duration: string;
     pharmacy: string;
+    initial_date: string;
+    end_date: string;
+    weight: string;
 };

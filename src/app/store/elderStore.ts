@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { redirect } from 'next/navigation';
 import { Elder } from '../api/elders/types';
 
 type ElderState = {
@@ -10,7 +9,7 @@ type ElderState = {
 type ElderActions = {
   getAll: () => void,
   getElder: (id: string) => void,
-  add: (id: string, elder: Elder) => void,
+  add: (elder: Elder) => void,
   edit: (id: string, elder: Elder) => void,
   remove: (id: string) => void
 }
@@ -22,7 +21,7 @@ const defaultInitState: ElderState = {
   selectedElder: null,
 };
 
-export const useElderStore = create<ElderStore>((set) => ({
+export const useElderStore = create<ElderStore>((set, get) => ({
   ...defaultInitState,
   getAll: async () => {
     try {
@@ -48,9 +47,9 @@ export const useElderStore = create<ElderStore>((set) => ({
       throw new Error('Failed to update elder:');
     }
   },
-  add: async (id: string, elder: Elder) => {
+  add: async (elder: Elder) => {
     try {
-      const response = await fetch(`/api/elders/${id}`, {
+      const response = await fetch('/api/elders', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -60,6 +59,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().getAll();
     } catch (error) {
       throw new Error('Failed to update elder:');
     }
@@ -76,6 +76,7 @@ export const useElderStore = create<ElderStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().getElder(id);
     } catch (error) {
       throw new Error('Failed to update elder:');
     }
@@ -88,11 +89,9 @@ export const useElderStore = create<ElderStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const elder = await response.json();
-      set({ selectedElder: elder });
-      await redirect('/app');
+      set({ selectedElder: null });
     } catch (error) {
-      throw new Error('Failed to update elder:');
+      throw new Error('Failed to update elder');
     }
   },
 }));

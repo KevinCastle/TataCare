@@ -9,6 +9,7 @@ type ContactState = {
 type ContactActions = {
     get: (elderId: string) => void,
     add: (contact: Contact) => void,
+    edit: (elderId: string, contact: Contact) => void,
     remove: (contact: Contact) => void
 }
 
@@ -45,7 +46,23 @@ export const useContactStore = create<ContactStore>((set) => ({
         throw new Error('Network response was not ok');
       }
     } catch (error) {
-      throw new Error('Failed to update contact:');
+      throw new Error('Failed to update contact');
+    }
+  },
+  edit: async (elderId: string, contact: Contact) => {
+    try {
+      const response = await fetch(`/api/contacts?elderId=${elderId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contact),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      throw new Error('Failed to update contact');
     }
   },
   remove: async (contact: Contact) => {
@@ -62,7 +79,7 @@ export const useContactStore = create<ContactStore>((set) => ({
       }
       await get(contact.elder_id);
     } catch (error) {
-      throw new Error('Failed to update contact:');
+      throw new Error('Failed to update contact');
     }
   },
 }));
