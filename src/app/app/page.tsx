@@ -17,7 +17,9 @@ function Page() {
 
   return (
     <main className="bg-zinc-200 min-h-full relative">
-      <FormModal type="elder" />
+      <div className="absolute top-4 right-4">
+        <FormModal type="elder" />
+      </div>
       <article className="h-full py-4">
         <section className="row-span-1 flex items-center justify-center h-[25vh]">
           <h1 className="text-3xl text-center">Lista de abuelitos</h1>

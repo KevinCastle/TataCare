@@ -21,6 +21,23 @@ export default function FormModal({ id, type }: FormModalProps) {
     setElderId(pathname.split('/')[2]);
   }
 
+  function translateType() {
+    switch (type) {
+      case 'elder':
+        return 'abuelito';
+      case 'medication':
+        return 'medicamento';
+      case 'taste':
+        return 'gusto';
+      case 'contact':
+        return 'contacto';
+      case 'comment':
+        return 'comentario';
+      default:
+        return '';
+    }
+  }
+
   // const { getTastes, editTaste, tastes } = useTasteStore((state) => ({
   //   getTastes: state.get,
   //   tastes: state.tastes,
@@ -107,7 +124,7 @@ export default function FormModal({ id, type }: FormModalProps) {
       ) : (
         <>
           <Button color="primary" type="button" onPress={onOpen}>
-            Registrar
+            {`Registrar ${translateType()}`}
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
             <ElderForm />
