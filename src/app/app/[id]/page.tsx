@@ -98,7 +98,7 @@ function Page() {
               avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
               title={`${elder.name} ${elder.surname}`}
               type="elder"
-              action="delete"
+              action="edit"
               id={elder.id}
             >
               <div className="grid grid-cols-2 gap-5">

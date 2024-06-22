@@ -40,23 +40,27 @@ export async function POST(request: Request) {
 
   try {
     const requestBody = await request.json();
-    const { elder } = requestBody;
 
-    const { id, ...elderData } = elder;
-    const keys = Object.keys(elderData);
+    const { id, ...elderData } = requestBody;
+    const updates = Object.keys(elderData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
     const values = Object.values(elderData);
-    const updates = keys.map((key, index) => `${key} = ${values[index]}`).join(', ');
-    const result = await sql<Elder>`
+    values.unshift(id);
+
+    const query = `
       UPDATE elders
       SET ${updates}
-      WHERE id=${id}
+      WHERE id = $1
+      RETURNING *;
     `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to edit elder.');
+    throw new Error('Failed to edit elder');
   }
 }
 
