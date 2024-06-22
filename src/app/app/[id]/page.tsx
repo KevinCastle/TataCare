@@ -55,13 +55,17 @@ function Page() {
   }));
 
   useEffect(() => {
-    if (!elder && elderId) {
-      getElder(elderId);
-      getAllergies(elderId);
-      getDiseases(elderId);
-      getMedications(elderId);
-      getContacts(elderId);
-      getLastComment(elderId);
+    if (elderId) {
+      if (!elder && elderId) {
+        getElder(elderId);
+      }
+      if (elder) {
+        getAllergies(elderId);
+        getDiseases(elderId);
+        getMedications(elderId);
+        getContacts(elderId);
+        getLastComment(elderId);
+      }
     }
   }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications, getContacts, getLastComment]);
 
@@ -84,7 +88,7 @@ function Page() {
   }
 
   return (
-    <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] overflow-y-auto relative">
+    <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] px-4 md:px-8 relative">
       <header className="flex items-center mb-4 pt-10">
         <IdentificationCard color="#006FEE" size={32} className="mr-2" />
         <p className="text-2xl font-medium">Ficha</p>
