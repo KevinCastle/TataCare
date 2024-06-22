@@ -8,7 +8,7 @@ const signOutButton = () => (
     type="button"
     onPress={async () => { await signOut(); }}
   >
-    <span className="text-red-400 lg:text-zinc-100 lg:max-w-0 lg:transition-all lg:duration-300 lg:group-hover:text-white lg:group-hover:max-w-20 mr-3 lg:mr-2 lg:group-hover:mr-3">Cerrar sesión</span>
+    <span className="text-red-400 lg:text-zinc-100 lg:max-w-0 lg:transition-all lg:duration-300 lg:group-hover:text-white lg:group-hover:max-w-20 mr-3 lg:mr-0 lg:group-hover:mr-3">Cerrar sesión</span>
     <SignOut size={16} className="text-red-400 lg:group-hover:text-white" weight="bold" />
   </Button>
 );
