@@ -45,7 +45,7 @@ export const calculateRemainingTime = (start: string, end: string) => {
   const oneYear = 12;
 
   if (startDate > endDate) {
-    return 'terminado';
+    return 'Terminado';
   }
 
   const diffInDays = Math.round(Math.abs((endDate.getTime() - startDate.getTime()) / oneDay));
