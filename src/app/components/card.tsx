@@ -12,7 +12,9 @@ interface CardProps {
     avatar?: string;
     icon?: ReactNode;
     type?: 'elder' | 'medication' | 'taste' | 'contact' | 'comment';
-    action?: 'edit' | 'delete' | 'like';
+    edit?: boolean;
+    remove?: boolean;
+    like?: boolean;
     id?: string;
     children: ReactNode;
     footerContent?: ReactNode;
@@ -23,7 +25,9 @@ const card: React.FC<CardProps> = ({
   avatar,
   icon,
   type,
-  action,
+  edit,
+  remove,
+  like,
   id,
   children,
   footerContent,
@@ -35,9 +39,9 @@ const card: React.FC<CardProps> = ({
         {icon && !avatar && icon}
       <p className="text-xl font-medium">{title}</p>
       <div className="ml-auto">
-        {action === 'edit' && type && <FormModal id={id} type={type} />}
-        {action === 'like' && type && <LikeButton type={type} />}
-        {action === 'delete' && type && id && <DeleteModal id={id} type={type} />}
+        {edit && type && <FormModal id={id} type={type} />}
+        {remove && type && id && <DeleteModal id={id} type={type} />}
+        {like && type && id && <LikeButton type={type} />}
       </div>
 
     </CardHeader>
