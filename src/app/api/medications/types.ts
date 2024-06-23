@@ -8,4 +8,6 @@ export type Medication = {
     initial_date: string;
     end_date: string;
     weight: string;
+    disease_id: string;
+    favorite: boolean;
 };

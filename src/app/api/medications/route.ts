@@ -19,18 +19,20 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const requestBody = await request.json();
-    const { medication } = requestBody;
+    const medication = await request.json();
 
-    const keys = Object.keys(medication).join(', ');
-    const values = Object.values(medication).join(', ');
+    const keys = (Object.keys(medication)).join(', ');
+    const placeholders = Object.keys(medication).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(medication);
 
-    const result = await sql<Medication>`
-      INSERT INTO medications (${keys})
-        VALUES (${values})
+    const query = `
+      INSERT INTO medication (${keys})
+      VALUES (${placeholders})
+      RETURNING *;
     `;
+    const data = await sql.query<Medication>(query, values);
 
-    return new Response(JSON.stringify(result.rows[0]), {
+    return new Response(JSON.stringify(data.rows), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
@@ -43,25 +45,27 @@ export async function POST(request: NextRequest) {
 
   try {
     const requestBody = await request.json();
-    const { medication } = requestBody;
-    const { searchParams } = request.nextUrl;
-    const elderId = searchParams.get('elderId');
 
-    const { id, ...medicationData } = medication;
-    const keys = Object.keys(medicationData);
+    const { id, ...medicationData } = requestBody;
+    const updates = Object.keys(medicationData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
     const values = Object.values(medicationData);
-    const updates = keys.map((key, index) => `${key} = ${values[index]}`).join(', ');
-    const result = await sql<Medication>`
+    values.unshift(id);
+
+    const query = `
       UPDATE medication
       SET ${updates}
-      WHERE elder_id=${elderId} AND id=${id}
+      WHERE id = $1
+      RETURNING *;
     `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to edit medication.');
+    throw new Error(`Failed to edit medication. ${err}`);
   }
 }
 

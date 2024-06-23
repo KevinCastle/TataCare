@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Medication } from '../api/medications/types';
 
 type MedicationState = {
@@ -9,7 +8,7 @@ type MedicationState = {
 type MedicationActions = {
     get: (elderId: string) => void,
     add: (medication: Medication) => void,
-    edit: (elderId: string, medication: Medication) => void,
+    edit: (medication: Medication) => void,
     remove: (medication: Medication) => void
 }
 
@@ -19,7 +18,7 @@ const defaultInitState: MedicationState = {
   medications: [],
 };
 
-export const useMedicationStore = create<MedicationStore>((set) => ({
+export const useMedicationStore = create<MedicationStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -45,13 +44,14 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(medication.elder_id);
     } catch (error) {
       throw new Error('Failed to update medication');
     }
   },
-  edit: async (elderId: string, medication: Medication) => {
+  edit: async (medication: Medication) => {
     try {
-      const response = await fetch(`/api/medications?elderId=${elderId}`, {
+      const response = await fetch('/api/medications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,8 +61,9 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(medication.elder_id);
     } catch (error) {
-      throw new Error('Failed to update medication');
+      throw new Error(`Failed to update medication, ${error}`);
     }
   },
   remove: async (medication: Medication) => {
@@ -77,7 +78,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(medication.elder_id);
+      await get().get(medication.elder_id);
     } catch (error) {
       throw new Error('Failed to update medication');
     }

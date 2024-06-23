@@ -102,7 +102,7 @@ function Page() {
               avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
               title={`${elder.name} ${elder.surname}`}
               type="elder"
-              action="edit"
+              edit
               id={elder.id}
             >
               <div className="grid grid-cols-2 gap-5">
@@ -152,7 +152,7 @@ function Page() {
               <div id="diagnosis">
                 <p className="font-medium text-zinc-600">Diagnóstico</p>
                 <div className="flex gap-1 mb-5">
-                  <Prescription size={20} color="#C20E4D" className="mt-1" />
+                  <Prescription size={20} color="#C20E4D" className="mt-1" weight="bold" />
                   <div>
                     {diseases && diseases.length > 0 ? (
                       diseases.map((disease) => (
@@ -165,13 +165,13 @@ function Page() {
                 </div>
               </div>
               <div id="medicines">
-                <p className="font-medium text-zinc-600">Medicamentos</p>
+                <p className="font-medium text-zinc-600">Medicamentos destacados</p>
                 <div className="flex gap-1 mb-5">
                   <Pill size={20} color="#006FEE" className="mt-1" />
                   <div>
                     {medications && medications.length > 0 ? (
-                      medications.map((medication) => (
-                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} ${medication.quantity}${medication.weight}`}</p>
+                      medications.filter((medication) => medication.favorite).map((medication) => (
+                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} cada ${medication.schedule}hrs`}</p>
                       ))
                     ) : (
                       <p className="text-lg font-medium text-zinc-900 text-pretty">No tiene medicamentos registrados</p>

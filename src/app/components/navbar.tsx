@@ -32,7 +32,7 @@ export default function Navbar() {
         </div>
       </div>
       <div className="flex grow flex-row justify-between space-x-2 lg:flex-col lg:justify-start lg:space-x-0 lg:space-y-4">
-        <NavLinks id="1" />
+        <NavLinks />
       </div>
       <div className="mt-auto border-t lg:border-t-0 lg:border-b border-solid border-zinc-200  pt-2 lg:pt-0 lg:pb-2">
         <Link isBlock href="/" color="foreground" className="font-medium flex h-[48px] grow items-center justify-center lg:flex-none lg:justify-start p-3 lg:p-2">

@@ -5,10 +5,12 @@ import {
   DatePicker, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem,
   Selection,
 } from '@nextui-org/react';
-import { useEffect, useState } from 'react';
+import {
+  MutableRefObject, useEffect, useRef, useState,
+} from 'react';
 import { DateValue, parseDate } from '@internationalized/date';
 import { v4 } from 'uuid';
-import { useElderStore, useMedicationStore } from '../store';
+import { useDiseaseStore, useElderStore, useMedicationStore } from '../store';
 import { Medication } from '../api/medications/types';
 
 interface MedicationFormProps {
@@ -26,7 +28,10 @@ export default function MedicationForm({ id }: MedicationFormProps) {
   const [pharmacy, setPharmacy] = useState<string>('');
   const [initialDate, setInitialDate] = useState<DateValue | null>(null);
   const [endDate, setEndDate] = useState<DateValue | null>(null);
+  const [diseaseId, setDiseaseId] = useState<Selection>(new Set([]));
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const onCloseRef: MutableRefObject<(() => void) | null> = useRef<(() => void) | null>(null);
 
   const medicationWeightTypes: string[] = [
     'Gramos (g)',
@@ -42,6 +47,11 @@ export default function MedicationForm({ id }: MedicationFormProps) {
     addMedication: state.add,
     editMedication: state.edit,
     medications: state.medications,
+  }));
+
+  const { getDisease, diseases } = useDiseaseStore((state) => ({
+    getDisease: state.get,
+    diseases: state.diseases,
   }));
 
   function validateForm() {
@@ -78,7 +88,9 @@ export default function MedicationForm({ id }: MedicationFormProps) {
   }
 
   const submitForm = () => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      return;
+    }
     if (elder) {
       const medicationModified = {
         id: '',
@@ -90,14 +102,19 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         pharmacy,
         initial_date: initialDate?.toString() || '',
         end_date: endDate?.toString() || '',
+        disease_id: Array.from(diseaseId)[0] as string,
+        favorite,
       };
 
       if (id) {
         medicationModified.id = id;
-        editMedication(elder.id, medicationModified);
+        editMedication(medicationModified);
       } else {
         medicationModified.id = v4();
         addMedication(medicationModified);
+      }
+      if (onCloseRef.current) {
+        onCloseRef.current();
       }
     }
   };
@@ -105,6 +122,9 @@ export default function MedicationForm({ id }: MedicationFormProps) {
   useEffect(() => {
     if (elder && !medications) {
       getMedications(elder.id);
+    }
+    if (elder && !diseases) {
+      getDisease(elder.id);
     }
     if (id && medications) {
       const medication = medications.find((medication: Medication) => medication.id === id);
@@ -114,86 +134,110 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         setWeight(new Set([medication.weight]));
         setSchedule(medication.schedule);
         setPharmacy(medication.pharmacy);
-        setInitialDate(parseDate(medication.initial_date));
-        setEndDate(parseDate(medication.end_date));
+        setInitialDate(parseDate(medication.initial_date.split('T')[0]));
+        setEndDate(parseDate(medication.end_date.split('T')[0]));
+        setDiseaseId(new Set([medication.disease_id]));
+        setFavorite(medication.favorite);
       }
     }
-  }, [id, elder, getMedications, medications]);
+  }, [id, elder, getMedications, medications, getDisease, diseases]);
 
   return (
     (
       <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">{medications.find((medication: Medication) => medication.id === id) ? 'Editar medicina' : 'Registrar medicina'}</ModalHeader>
-            <ModalBody>
-              <form className="flex flex-col gap-y-5">
-                <Input
-                  isRequired
-                  type="text"
-                  label="Nombre"
-                  placeholder="Introduzca el nombre"
-                  value={name}
-                  onValueChange={setName}
-                />
-                <DatePicker
-                  label="Fecha de inicio"
-                  isRequired
-                  value={initialDate}
-                  onChange={setInitialDate}
-                />
-                <DatePicker
-                  label="Fecha de término"
-                  isRequired
-                  value={endDate}
-                  onChange={setEndDate}
-                />
-                <div className="grid grid-cols-2 gap-2">
+        {(onClose) => {
+          onCloseRef.current = onClose;
+          return (
+            <>
+              <ModalHeader className="flex flex-col gap-1">{medications.find((medication: Medication) => medication.id === id) ? 'Editar medicina' : 'Registrar medicina'}</ModalHeader>
+              <ModalBody>
+                <form className="flex flex-col gap-y-5">
                   <Input
-                    className="col-span-1"
                     isRequired
-                    type="number"
-                    label="Cantidad"
-                    placeholder="Introduzca la cantidad"
-                    value={quantity}
-                    onValueChange={setQuantity}
+                    type="text"
+                    label="Nombre"
+                    placeholder="Introduzca el nombre"
+                    value={name}
+                    onValueChange={setName}
+                  />
+                  <DatePicker
+                    label="Fecha de inicio"
+                    isRequired
+                    value={initialDate}
+                    onChange={setInitialDate}
+                  />
+                  <DatePicker
+                    label="Fecha de término"
+                    isRequired
+                    value={endDate}
+                    onChange={setEndDate}
+                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      className="col-span-1"
+                      isRequired
+                      type="number"
+                      label="Cantidad"
+                      placeholder="Introduzca la cantidad"
+                      value={quantity}
+                      onValueChange={setQuantity}
+                    />
+                    <Select
+                      className="col-span-1"
+                      isRequired
+                      label="Peso"
+                      selectedKeys={weight}
+                      onSelectionChange={setWeight}
+                    >
+                      {medicationWeightTypes.map((weight) => (
+                        <SelectItem key={weight}>
+                          {weight}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Input
+                      className="col-span-2"
+                      isRequired
+                      type="number"
+                      label="Cada cuantas horas"
+                      placeholder="Introduzca un número"
+                      value={schedule}
+                      onValueChange={setSchedule}
+                    />
+                  </div>
+                  <Input
+                    isRequired
+                    type="text"
+                    label="Farmacia donde conseguir la medicina"
+                    placeholder="Introduzca la farmacia"
+                    value={pharmacy}
+                    onValueChange={setPharmacy}
                   />
                   <Select
-                    className="col-span-1"
-                    isRequired
-                    label="Peso"
-                    selectedKeys={weight}
-                    onSelectionChange={setWeight}
+                    label="Recetado para"
+                    selectedKeys={diseaseId}
+                    onSelectionChange={setDiseaseId}
                   >
-                    {medicationWeightTypes.map((weight) => (
-                      <SelectItem key={weight}>
-                        {weight}
+                    {diseases.map((disease) => (
+                      <SelectItem key={disease.id}>
+                        {disease.name}
                       </SelectItem>
                     ))}
                   </Select>
-                  <Input
-                    className="col-span-2"
-                    isRequired
-                    type="number"
-                    label="Cada cuantas horas"
-                    placeholder="Introduzca un número"
-                    value={schedule}
-                    onValueChange={setSchedule}
-                  />
-                </div>
-              </form>
-            </ModalBody>
-            <ModalFooter>
-              {error && (<p>{error}</p>)}
-              <Button color="danger" variant="light" onPress={onClose}>
-                Atrás
-              </Button>
-              <Button color="primary" onPress={() => { submitForm(); onClose(); }}>
-                {id ? 'Guardar cambios' : 'Registrar'}
-              </Button>
-            </ModalFooter>
-          </>
-        )}
+                </form>
+              </ModalBody>
+              <ModalFooter>
+                {error && (<p>{error}</p>)}
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Atrás
+                </Button>
+                <Button color="primary" onPress={() => { submitForm(); }}>
+                  {id ? 'Guardar cambios' : 'Agregar'}
+                </Button>
+              </ModalFooter>
+            </>
+          );
+        }}
       </ModalContent>
 
     )
