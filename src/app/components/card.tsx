@@ -41,7 +41,7 @@ const card: React.FC<CardProps> = ({
       <div className="ml-auto flex gap-x-1">
         {edit && type && <FormModal id={id} type={type} />}
         {remove && type && id && <DeleteModal id={id} type={type} />}
-        {like && type && id && <LikeButton type={type} />}
+        {like && type && id && <LikeButton id={id} type={type} />}
       </div>
 
     </CardHeader>

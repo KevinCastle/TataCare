@@ -27,6 +27,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
   const [initialDate, setInitialDate] = useState<DateValue | null>(null);
   const [endDate, setEndDate] = useState<DateValue | null>(null);
   const [diseaseId, setDiseaseId] = useState<Selection>(new Set([]));
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   const medicationWeightTypes: string[] = [
@@ -97,6 +98,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         initial_date: initialDate?.toString() || '',
         end_date: endDate?.toString() || '',
         disease_id: Array.from(diseaseId)[0] as string,
+        favorite,
       };
 
       if (id) {
@@ -127,6 +129,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         setInitialDate(parseDate(medication.initial_date));
         setEndDate(parseDate(medication.end_date));
         setDiseaseId(new Set([medication.weight]));
+        setFavorite(medication.favorite);
       }
     }
   }, [id, elder, getMedications, medications, getDisease, diseases]);
