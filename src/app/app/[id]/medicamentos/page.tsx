@@ -85,19 +85,21 @@ function Page() {
                   </div>
                   <div className="col-span-3 grid grid-cols-2">
                     <div className="col-span-1">
-                      <p className="font-medium text-zinc-600">Recetado por</p>
-                      <div className="flex gap-1">
-                        <Prescription size={20} color="#C20E4D" className="mt-1" weight="bold" />
-                        <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{getDiseaseName(medication.disease_id)}</p>
-                      </div>
-                    </div>
-                    <div className="col-span-1">
                       <p className="font-medium text-zinc-600">Farmacia donde comprar</p>
                       <div className="flex gap-1">
                         <Storefront size={20} color="#C20E4D" className="mt-1" weight="bold" />
                         <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{medication.pharmacy}</p>
                       </div>
                     </div>
+                    {medication.disease_id && (
+                      <div className="col-span-1">
+                        <p className="font-medium text-zinc-600">Recetado para</p>
+                        <div className="flex gap-1">
+                          <Prescription size={20} color="#C20E4D" className="mt-1" weight="bold" />
+                          <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{getDiseaseName(medication.disease_id)}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>

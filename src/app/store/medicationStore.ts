@@ -44,6 +44,7 @@ export const useMedicationStore = create<MedicationStore>((set, get) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(medication.elder_id);
     } catch (error) {
       throw new Error('Failed to update medication');
     }

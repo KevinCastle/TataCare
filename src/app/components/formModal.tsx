@@ -40,7 +40,8 @@ export default function FormModal({ id, type }: FormModalProps) {
             <Pencil size={24} weight="bold" color="#002E62" />
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
-            <ElderForm elderId={id} />
+            {type === 'elder' && (<ElderForm elderId={id} />)}
+            {type === 'medication' && (<MedicationForm id={id} />)}
           </Modal>
         </>
       ) : (

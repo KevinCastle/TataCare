@@ -19,18 +19,20 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const requestBody = await request.json();
-    const { medication } = requestBody;
+    const medication = await request.json();
 
-    const keys = Object.keys(medication).join(', ');
-    const values = Object.values(medication).join(', ');
+    const keys = (Object.keys(medication)).join(', ');
+    const placeholders = Object.keys(medication).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(medication);
 
-    const result = await sql<Medication>`
-      INSERT INTO medications (${keys})
-        VALUES (${values})
+    const query = `
+      INSERT INTO medication (${keys})
+      VALUES (${placeholders})
+      RETURNING *;
     `;
+    const data = await sql.query<Medication>(query, values);
 
-    return new Response(JSON.stringify(result.rows[0]), {
+    return new Response(JSON.stringify(data.rows), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
