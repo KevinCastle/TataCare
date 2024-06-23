@@ -3,7 +3,7 @@
 import {
   Modal, Button, useDisclosure,
 } from '@nextui-org/react';
-import { Pencil } from '@phosphor-icons/react/dist/ssr';
+import { Pencil, Plus } from '@phosphor-icons/react/dist/ssr';
 import ElderForm from './elderForm';
 import MedicationForm from './medicationForm';
 
@@ -46,7 +46,8 @@ export default function FormModal({ id, type }: FormModalProps) {
       ) : (
         <>
           <Button color="primary" type="button" onPress={onOpen}>
-            {`Registrar ${translateType()}`}
+            <Plus size={20} weight="bold" />
+            <span>{`Agregar ${translateType()}`}</span>
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
             {type === 'elder' && (<ElderForm />)}
