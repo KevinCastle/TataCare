@@ -8,7 +8,9 @@ import {
   DatePicker, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem,
   Selection,
 } from '@nextui-org/react';
-import { useEffect, useState } from 'react';
+import {
+  MutableRefObject, useEffect, useRef, useState,
+} from 'react';
 import { DateValue, parseDate } from '@internationalized/date';
 import { v4 } from 'uuid';
 import { bloodTypes } from '../utils';
@@ -31,6 +33,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
   const [conditions, setConditions] = useState<string[]>([]);
   const [countries, setCountries] = useState<Selection>(new Set([]));
   const [error, setError] = useState<string>('');
+  const onCloseRef: MutableRefObject<(() => void) | null> = useRef<(() => void) | null>(null);
   const genres = [
     {
       key: 'masculino',
@@ -114,6 +117,9 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       elderModified.id = v4();
       addElder(elderModified);
     }
+    if (onCloseRef.current) {
+      onCloseRef.current();
+    }
   };
 
   useEffect(() => {
@@ -162,116 +168,119 @@ export default function ElderForm({ elderId }: ElderFormProps) {
   return (
     (
       <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">{elder ? 'Editar abuelito' : 'Registrar abuelito'}</ModalHeader>
-            <ModalBody>
-              <form className="flex flex-col gap-y-5">
-                <Input
-                  isRequired
-                  type="text"
-                  label="Nombre"
-                  placeholder="Introduzca el nombre"
-                  value={name}
-                  onValueChange={setName}
-                />
-                <Input
-                  isRequired
-                  type="text"
-                  label="Apellido"
-                  placeholder="Introduzca el apellido"
-                  value={surName}
-                  onValueChange={setSurName}
-                />
-                <DatePicker
-                  label="Fecha de nacimiento"
-                  isRequired
-                  showMonthAndYearPickers
-                  value={birthDate}
-                  onChange={setBirthDate}
-                />
-                <Select
-                  isRequired
-                  label="Sexo"
-                  selectedKeys={genre}
-                  onSelectionChange={setGenre}
-                >
-                  {genres.map((genre) => (
-                    <SelectItem key={genre.key}>
-                      {genre.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  isRequired
-                  label="Tipo de sangre"
-                  selectedKeys={bloodType}
-                  onSelectionChange={setBloodType}
-                >
-                  {bloodTypes.map((bloodType) => (
-                    <SelectItem key={bloodType}>
-                      {bloodType}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  isRequired
-                  label="Nacionalidad"
-                  selectedKeys={nationality}
-                  onSelectionChange={setNationality}
-                >
-                  {Object.entries(countries).map(([code, name]) => (
-                    <SelectItem
-                      key={name}
-                      startContent={<Avatar alt={name} className="w-6 h-6" src={`https://flagcdn.com/${code}.svg`} />}
-                    >
-                      {name}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Input
-                  isRequired
-                  type="text"
-                  label="Número de identidad"
-                  placeholder="Introduzca el rut con puntos y guión"
-                  value={identityNumber}
-                  onValueChange={setIdentityNumber}
-                />
-                <Select
-                  isRequired
-                  label="Previsión de salud"
-                  selectedKeys={healthPrevision}
-                  onSelectionChange={setHealthPrevision}
-                >
-                  {previsions.map((prevision) => (
-                    <SelectItem key={prevision.id}>
-                      {prevision.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <CheckboxGroup
-                  label="Selecciona las siguientes condiciones que tenga presente"
-                  value={conditions}
-                  onValueChange={setConditions}
-                >
-                  <Checkbox value="diabetic">Diabetes</Checkbox>
-                  <Checkbox value="hypertensive">Hipertensión</Checkbox>
-                  <Checkbox value="urinary_incontinence">Incontinencia urinaria</Checkbox>
-                  <Checkbox value="kidney_failure">problemas renales</Checkbox>
-                </CheckboxGroup>
-              </form>
-            </ModalBody>
-            <ModalFooter>
-              {error && (<p>{error}</p>)}
-              <Button color="danger" variant="light" onPress={onClose}>
-                Atrás
-              </Button>
-              <Button color="primary" onPress={() => { submitForm(); onClose(); }}>
-                {elderId && elder ? 'Guardar cambios' : 'Registrar'}
-              </Button>
-            </ModalFooter>
-          </>
-        )}
+        {(onClose) => {
+          onCloseRef.current = onClose;
+          return (
+            <>
+              <ModalHeader className="flex flex-col gap-1">{elder ? 'Editar abuelito' : 'Registrar abuelito'}</ModalHeader>
+              <ModalBody>
+                <form className="flex flex-col gap-y-5">
+                  <Input
+                    isRequired
+                    type="text"
+                    label="Nombre"
+                    placeholder="Introduzca el nombre"
+                    value={name}
+                    onValueChange={setName}
+                  />
+                  <Input
+                    isRequired
+                    type="text"
+                    label="Apellido"
+                    placeholder="Introduzca el apellido"
+                    value={surName}
+                    onValueChange={setSurName}
+                  />
+                  <DatePicker
+                    label="Fecha de nacimiento"
+                    isRequired
+                    showMonthAndYearPickers
+                    value={birthDate}
+                    onChange={setBirthDate}
+                  />
+                  <Select
+                    isRequired
+                    label="Sexo"
+                    selectedKeys={genre}
+                    onSelectionChange={setGenre}
+                  >
+                    {genres.map((genre) => (
+                      <SelectItem key={genre.key}>
+                        {genre.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <Select
+                    isRequired
+                    label="Tipo de sangre"
+                    selectedKeys={bloodType}
+                    onSelectionChange={setBloodType}
+                  >
+                    {bloodTypes.map((bloodType) => (
+                      <SelectItem key={bloodType}>
+                        {bloodType}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <Select
+                    isRequired
+                    label="Nacionalidad"
+                    selectedKeys={nationality}
+                    onSelectionChange={setNationality}
+                  >
+                    {Object.entries(countries).map(([code, name]) => (
+                      <SelectItem
+                        key={name}
+                        startContent={<Avatar alt={name} className="w-6 h-6" src={`https://flagcdn.com/${code}.svg`} />}
+                      >
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <Input
+                    isRequired
+                    type="text"
+                    label="Número de identidad"
+                    placeholder="Introduzca el rut con puntos y guión"
+                    value={identityNumber}
+                    onValueChange={setIdentityNumber}
+                  />
+                  <Select
+                    isRequired
+                    label="Previsión de salud"
+                    selectedKeys={healthPrevision}
+                    onSelectionChange={setHealthPrevision}
+                  >
+                    {previsions.map((prevision) => (
+                      <SelectItem key={prevision.id}>
+                        {prevision.name}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  <CheckboxGroup
+                    label="Selecciona las siguientes condiciones que tenga presente"
+                    value={conditions}
+                    onValueChange={setConditions}
+                  >
+                    <Checkbox value="diabetic">Diabetes</Checkbox>
+                    <Checkbox value="hypertensive">Hipertensión</Checkbox>
+                    <Checkbox value="urinary_incontinence">Incontinencia urinaria</Checkbox>
+                    <Checkbox value="kidney_failure">problemas renales</Checkbox>
+                  </CheckboxGroup>
+                </form>
+              </ModalBody>
+              <ModalFooter>
+                {error && (<p>{error}</p>)}
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Atrás
+                </Button>
+                <Button color="primary" onPress={() => { submitForm(); onClose(); }}>
+                  {elderId && elder ? 'Guardar cambios' : 'Registrar'}
+                </Button>
+              </ModalFooter>
+            </>
+          );
+        }}
       </ModalContent>
 
     )
