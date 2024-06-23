@@ -43,23 +43,27 @@ export async function POST(request: NextRequest) {
 
   try {
     const requestBody = await request.json();
-    const { medication } = requestBody;
 
-    const { id, ...medicationData } = medication;
-    const keys = Object.keys(medicationData);
+    const { id, ...medicationData } = requestBody;
+    const updates = Object.keys(medicationData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
     const values = Object.values(medicationData);
-    const updates = keys.map((key, index) => `${key} = ${values[index]}`).join(', ');
-    const result = await sql<Medication>`
+    values.unshift(id);
+
+    const query = `
       UPDATE medication
       SET ${updates}
-      WHERE id=${id}
+      WHERE id = $1
+      RETURNING *;
     `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to edit medication.');
+    throw new Error(`Failed to edit medication. ${err}`);
   }
 }
 

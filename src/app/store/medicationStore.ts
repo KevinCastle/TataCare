@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Medication } from '../api/medications/types';
 
 type MedicationState = {
@@ -19,7 +18,7 @@ const defaultInitState: MedicationState = {
   medications: [],
 };
 
-export const useMedicationStore = create<MedicationStore>((set) => ({
+export const useMedicationStore = create<MedicationStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -61,8 +60,9 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(medication.elder_id);
     } catch (error) {
-      throw new Error('Failed to update medication');
+      throw new Error(`Failed to update medication, ${error}`);
     }
   },
   remove: async (medication: Medication) => {
@@ -77,7 +77,7 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(medication.elder_id);
+      await get().get(medication.elder_id);
     } catch (error) {
       throw new Error('Failed to update medication');
     }
