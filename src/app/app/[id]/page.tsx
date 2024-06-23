@@ -152,7 +152,7 @@ function Page() {
               <div id="diagnosis">
                 <p className="font-medium text-zinc-600">Diagnóstico</p>
                 <div className="flex gap-1 mb-5">
-                  <Prescription size={20} color="#C20E4D" className="mt-1" />
+                  <Prescription size={20} color="#C20E4D" className="mt-1" weight="bold" />
                   <div>
                     {diseases && diseases.length > 0 ? (
                       diseases.map((disease) => (

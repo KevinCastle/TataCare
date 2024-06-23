@@ -36,8 +36,8 @@ export default function FormModal({ id, type }: FormModalProps) {
     <div>
       {id ? (
         <>
-          <Button type="button" onPress={onOpen} className="h-8 w-8 min-w-0 flex justify-center items-center bg-zinc-200/60 hover:bg-zinc-300/80 transition-colors duration-150 rounded-full px-1">
-            <Pencil size={24} weight="bold" color="#F31260" />
+          <Button type="button" onPress={onOpen} className="h-8 w-8 min-w-0 flex justify-center items-center bg-transparent hover:bg-zinc-300/80 transition-colors duration-150 rounded-full px-1">
+            <Pencil size={24} weight="bold" color="#002E62" />
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
             <ElderForm elderId={id} />

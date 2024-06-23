@@ -38,7 +38,7 @@ const card: React.FC<CardProps> = ({
         {avatar && !icon && <Avatar showFallback src={avatar} />}
         {icon && !avatar && icon}
       <p className="text-xl font-medium">{title}</p>
-      <div className="ml-auto">
+      <div className="ml-auto flex gap-x-1">
         {edit && type && <FormModal id={id} type={type} />}
         {remove && type && id && <DeleteModal id={id} type={type} />}
         {like && type && id && <LikeButton type={type} />}
