@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from 'react';
 import { DateValue, parseDate } from '@internationalized/date';
 import { v4 } from 'uuid';
-import { useElderStore, useMedicationStore } from '../store';
+import { useDiseaseStore, useElderStore, useMedicationStore } from '../store';
 import { Medication } from '../api/medications/types';
 
 interface MedicationFormProps {
@@ -26,6 +26,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
   const [pharmacy, setPharmacy] = useState<string>('');
   const [initialDate, setInitialDate] = useState<DateValue | null>(null);
   const [endDate, setEndDate] = useState<DateValue | null>(null);
+  const [diseaseId, setDiseaseId] = useState<Selection>(new Set([]));
   const [error, setError] = useState<string>('');
 
   const medicationWeightTypes: string[] = [
@@ -42,6 +43,11 @@ export default function MedicationForm({ id }: MedicationFormProps) {
     addMedication: state.add,
     editMedication: state.edit,
     medications: state.medications,
+  }));
+
+  const { getDisease, diseases } = useDiseaseStore((state) => ({
+    getDisease: state.get,
+    diseases: state.diseases,
   }));
 
   function validateForm() {
@@ -90,6 +96,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         pharmacy,
         initial_date: initialDate?.toString() || '',
         end_date: endDate?.toString() || '',
+        disease_id: Array.from(diseaseId)[0] as string,
       };
 
       if (id) {
@@ -106,6 +113,9 @@ export default function MedicationForm({ id }: MedicationFormProps) {
     if (elder && !medications) {
       getMedications(elder.id);
     }
+    if (elder && !diseases) {
+      getDisease(elder.id);
+    }
     if (id && medications) {
       const medication = medications.find((medication: Medication) => medication.id === id);
       if (medication) {
@@ -116,9 +126,10 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         setPharmacy(medication.pharmacy);
         setInitialDate(parseDate(medication.initial_date));
         setEndDate(parseDate(medication.end_date));
+        setDiseaseId(new Set([medication.weight]));
       }
     }
-  }, [id, elder, getMedications, medications]);
+  }, [id, elder, getMedications, medications, getDisease, diseases]);
 
   return (
     (
@@ -181,6 +192,18 @@ export default function MedicationForm({ id }: MedicationFormProps) {
                     onValueChange={setSchedule}
                   />
                 </div>
+                <Select
+                  isRequired
+                  label="Recetado por"
+                  selectedKeys={diseaseId}
+                  onSelectionChange={setDiseaseId}
+                >
+                  {diseases.map((disease) => (
+                    <SelectItem key={disease.id}>
+                      {disease.name}
+                    </SelectItem>
+                  ))}
+                </Select>
               </form>
             </ModalBody>
             <ModalFooter>
