@@ -165,13 +165,13 @@ function Page() {
                 </div>
               </div>
               <div id="medicines">
-                <p className="font-medium text-zinc-600">Medicamentos</p>
+                <p className="font-medium text-zinc-600">Medicamentos destacados</p>
                 <div className="flex gap-1 mb-5">
                   <Pill size={20} color="#006FEE" className="mt-1" />
                   <div>
                     {medications && medications.length > 0 ? (
-                      medications.map((medication) => (
-                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} ${medication.quantity}${medication.weight}`}</p>
+                      medications.filter((medication) => medication.favorite).map((medication) => (
+                        <p key={medication.id} className="text-lg font-medium text-zinc-900 text-pretty">{`${medication.name} cada ${medication.schedule}hrs`}</p>
                       ))
                     ) : (
                       <p className="text-lg font-medium text-zinc-900 text-pretty">No tiene medicamentos registrados</p>
