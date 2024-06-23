@@ -44,8 +44,6 @@ export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
     const { contact } = requestBody;
-    const { searchParams } = request.nextUrl;
-    const elderId = searchParams.get('elderId');
 
     const { id, ...contactData } = contact;
     const keys = Object.keys(contactData);
@@ -54,7 +52,7 @@ export async function POST(request: NextRequest) {
     const result = await sql<Contact>`
       UPDATE contact
       SET ${updates}
-      WHERE elder_id=${elderId} AND id=${id}
+      WHERE id=${id}
     `;
 
     return new Response(JSON.stringify(result.rows[0]), {

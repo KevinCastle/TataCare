@@ -9,7 +9,7 @@ type ContactState = {
 type ContactActions = {
     get: (elderId: string) => void,
     add: (contact: Contact) => void,
-    edit: (elderId: string, contact: Contact) => void,
+    edit: (contact: Contact) => void,
     remove: (contact: Contact) => void
 }
 
@@ -49,9 +49,9 @@ export const useContactStore = create<ContactStore>((set) => ({
       throw new Error('Failed to update contact');
     }
   },
-  edit: async (elderId: string, contact: Contact) => {
+  edit: async (contact: Contact) => {
     try {
-      const response = await fetch(`/api/contacts?elderId=${elderId}`, {
+      const response = await fetch('/api/contacts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

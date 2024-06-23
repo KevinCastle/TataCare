@@ -101,7 +101,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
 
       if (id) {
         medicationModified.id = id;
-        editMedication(elder.id, medicationModified);
+        editMedication(medicationModified);
       } else {
         medicationModified.id = v4();
         addMedication(medicationModified);

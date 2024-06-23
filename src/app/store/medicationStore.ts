@@ -9,7 +9,7 @@ type MedicationState = {
 type MedicationActions = {
     get: (elderId: string) => void,
     add: (medication: Medication) => void,
-    edit: (elderId: string, medication: Medication) => void,
+    edit: (medication: Medication) => void,
     remove: (medication: Medication) => void
 }
 
@@ -49,9 +49,9 @@ export const useMedicationStore = create<MedicationStore>((set) => ({
       throw new Error('Failed to update medication');
     }
   },
-  edit: async (elderId: string, medication: Medication) => {
+  edit: async (medication: Medication) => {
     try {
-      const response = await fetch(`/api/medications?elderId=${elderId}`, {
+      const response = await fetch('/api/medications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
