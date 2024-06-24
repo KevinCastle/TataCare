@@ -1,88 +1,84 @@
 'use client';
 
 import {
-  ArrowRight, At, Key,
+  ArrowRight,
+  Envelope,
+  Eye,
+  EyeSlash,
+  UsersThree,
   WarningCircle,
 } from '@phosphor-icons/react/dist/ssr';
-import { useFormState, useFormStatus } from 'react-dom';
-import { Button } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import { authenticate } from '@/app/api/user/actions';
+import { useActionState, useState } from 'react';
 
 export default function LoginPage() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
-  const { pending } = useFormStatus();
+  const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
+  const [isVisible, setIsVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <main className="flex items-center justify-center md:h-screen">
+    <main className="flex items-center justify-center md:h-screen overflow-hidden">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-lg bg-blue-500 p-3 md:h-36">
-          <div className="w-32 text-white md:w-36">
-            <p>TATACARE</p>
+        <div className="flex h-20 w-full items-end rounded-lg bg-blue-700 text-white p-3 md:h-36">
+          <div className="flex items-center">
+            <div>
+              <UsersThree size={40} className="h-auto w-8 sm:w-10 mr-2" />
+            </div>
+            <p className="text-2xl sm:text-3xl font-medium">Tatacare</p>
           </div>
         </div>
-        <form action={dispatch} className="space-y-3">
+        <form action={formAction} className="space-y-3">
           <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-            <h1 className="mb-3 text-2xl">
-              Please log in to continue.
+            <h1 className="mb-6 text-2xl">
+              Inicia sesión en tu cuenta.
             </h1>
-            <div className="w-full">
-              <div>
-                <label
-                  className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                  htmlFor="email"
-                >
-                  Email
-                </label>
-                <div className="relative">
-                  <input
-                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                    id="email"
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email address"
-                    required
-                  />
-                  <At size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label
-                  className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                  htmlFor="password"
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-                    id="password"
-                    type="password"
-                    name="password"
-                    placeholder="Enter password"
-                    required
-                    minLength={6}
-                  />
-                  <Key size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-                </div>
-              </div>
+            <div className="w-full flex flex-col gap-4 my-2">
+              <Input
+                type="email"
+                label="Correo electrónico"
+                color="primary"
+                placeholder="Ingrese su correo electrónico"
+                value={email}
+                onValueChange={setEmail}
+                startContent={(
+                  <Envelope size={24} weight="fill" className="text-blue-400 pointer-events-none" />
+                )}
+                isRequired
+              />
+              <Input
+                label="Contraseña"
+                color="primary"
+                placeholder="Ingrese su contraseña"
+                value={password}
+                onValueChange={setPassword}
+                endContent={(
+                  <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                    {isVisible ? (
+                      <EyeSlash size={24} className="text-blue-400 pointer-events-none" />
+                    ) : (
+                      <Eye size={24} className=" text-blue-400 pointer-events-none" />
+                    )}
+                  </button>
+                )}
+                type={isVisible ? 'text' : 'password'}
+                isRequired
+              />
             </div>
-            <Button color="primary" type="submit" className="mt-4 w-full" aria-disabled={pending}>
-              Log in
+            <Button color="primary" type="submit" className="mt-4 w-full" isDisabled={isPending}>
+              Inicio de sesión
               {' '}
               <ArrowRight size={20} className="ml-auto text-gray-50" />
             </Button>
-            <div
-              className="flex h-8 items-end space-x-1"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {errorMessage && (
-                <>
-                  <WarningCircle size={20} className="text-red-500" />
-                  <p className="text-sm text-red-500">{errorMessage}</p>
-                </>
-              )}
+            {errorMessage && (
+            <div className="flex items-center">
+              <WarningCircle size={20} className="text-red-500" />
+              <p className="text-sm text-red-500">{errorMessage}</p>
             </div>
+            )}
           </div>
         </form>
       </div>
