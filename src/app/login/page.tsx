@@ -10,13 +10,16 @@ import {
 } from '@phosphor-icons/react/dist/ssr';
 import { Button, Input } from '@nextui-org/react';
 import { authenticate } from '@/app/api/user/actions';
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
+import { useFormState } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined);
+  const [errorMessage, formAction, isPending] = useFormState(authenticate, undefined);
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -26,7 +29,7 @@ export default function LoginPage() {
         <div className="flex h-20 w-full items-end rounded-lg bg-blue-700 text-white p-3 md:h-36">
           <div className="flex items-center">
             <div>
-              <UsersThree size={40} className="h-auto w-8 sm:w-10 mr-2" />
+              <UsersThree className="h-auto w-8 sm:w-10 mr-2" />
             </div>
             <p className="text-2xl sm:text-3xl font-medium">Tatacare</p>
           </div>
@@ -45,7 +48,7 @@ export default function LoginPage() {
                 value={email}
                 onValueChange={setEmail}
                 startContent={(
-                  <Envelope size={24} weight="fill" className="text-blue-400 pointer-events-none" />
+                  <Envelope size={20} weight="fill" className="text-blue-400 pointer-events-none" />
                 )}
                 isRequired
               />
@@ -68,17 +71,23 @@ export default function LoginPage() {
                 isRequired
               />
             </div>
+            {errorMessage && (
+              <div className="flex items-center">
+                <WarningCircle size={20} className="text-red-500" />
+                <p className="text-sm text-red-500 ml-2">{errorMessage}</p>
+              </div>
+            )}
             <Button color="primary" type="submit" className="mt-4 w-full" isDisabled={isPending}>
               Inicio de sesión
               {' '}
               <ArrowRight size={20} className="ml-auto text-gray-50" />
             </Button>
-            {errorMessage && (
-            <div className="flex items-center">
-              <WarningCircle size={20} className="text-red-500" />
-              <p className="text-sm text-red-500">{errorMessage}</p>
+            <div className="flex justify-center items-center mt-4">
+              <span className="text-xs text-gray-600 mr-2">¿No tiene cuenta aún?</span>
+              <Button color="primary" variant="light" className="text-xs font-semibold" onPress={() => router.push('/login/signup')}>
+                Crear cuenta
+              </Button>
             </div>
-            )}
           </div>
         </form>
       </div>
