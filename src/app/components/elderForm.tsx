@@ -13,6 +13,7 @@ import {
 } from 'react';
 import { DateValue, parseDate } from '@internationalized/date';
 import { v4 } from 'uuid';
+import { PutBlobResult } from '@vercel/blob';
 import { bloodTypes } from '../utils';
 import { previsions } from '../utils/PrevisionsUtils';
 import { useElderStore } from '../store';
@@ -34,6 +35,8 @@ export default function ElderForm({ elderId }: ElderFormProps) {
   const [countries, setCountries] = useState<Selection>(new Set([]));
   const [error, setError] = useState<string>('');
   const onCloseRef: MutableRefObject<(() => void) | null> = useRef<(() => void) | null>(null);
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const genres = [
     {
       key: 'masculino',
@@ -46,16 +49,16 @@ export default function ElderForm({ elderId }: ElderFormProps) {
   ];
 
   const {
-    getElder, editElder, addElder, selectedElder: elder,
+    getElder, editElder, addElder, selectedElder: elder, uploadImage,
   } = useElderStore((state) => ({
     getElder: state.getElder,
     addElder: state.add,
     editElder: state.edit,
     selectedElder: state.selectedElder,
+    uploadImage: state.uploadImage,
   }));
 
   function validateForm() {
-    // Check for empty or null values
     if (!name.trim()) {
       setError('El nombre es requerido.');
       return false;
@@ -92,6 +95,17 @@ export default function ElderForm({ elderId }: ElderFormProps) {
     return true;
   }
 
+  const handleUploadImage = async () => {
+    if (!inputFileRef.current?.files) {
+      throw new Error('No file selected');
+    }
+
+    const file = inputFileRef.current.files[0];
+
+    const blob = await uploadImage(file);
+    setBlob(blob);
+  };
+
   const submitForm = () => {
     if (!validateForm()) return;
     const elderModified = {
@@ -108,6 +122,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       identification_number: identityNumber,
       kidney_failure: conditions.includes('kidney_failure'),
       urinary_incontinence: conditions.includes('urinary_incontinence'),
+      avatar: blob?.url || '',
     };
 
     if (elder) {
@@ -267,6 +282,12 @@ export default function ElderForm({ elderId }: ElderFormProps) {
                     <Checkbox value="urinary_incontinence">Incontinencia urinaria</Checkbox>
                     <Checkbox value="kidney_failure">problemas renales</Checkbox>
                   </CheckboxGroup>
+                  <div className="hidden">
+                    <p className="text-medium text-foreground-500 mb-1">Sube una foto de perfil para la ficha</p>
+                    <div className="hiddenflex w-full items-center justify-between space-x-4 p-2 border-2  hover:border-gray-400 rounded-xl transition-colors duration-300">
+                      <input onChange={handleUploadImage} ref={inputFileRef} type="file" name="image" className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100" />
+                    </div>
+                  </div>
                 </form>
               </ModalBody>
               <ModalFooter>
