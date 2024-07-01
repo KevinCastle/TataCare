@@ -99,7 +99,7 @@ function Page() {
         <article className="lg:grid lg:grid-cols-12 lg:grid-rows-2 lg:gap-4 mt-3 lg:mt-0">
           <section id="personal-data" className="lg:col-span-7 lg:row-span-1 mt-3 lg:mt-0">
             <Card
-              avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+              avatar={elder.avatar}
               title={`${elder.name} ${elder.surname}`}
               type="elder"
               edit
