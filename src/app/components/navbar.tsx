@@ -41,8 +41,16 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="hidden lg:flex items-center gap-x-3 p-2 pt-4">
-        <Avatar showFallback src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
-        <p className="font-medium">{user?.name}</p>
+        {user && (
+          <>
+            <Avatar showFallback src={user.avatar} />
+            <p className="font-medium">
+              {user.name}
+              {' '}
+              {user.surname}
+            </p>
+          </>
+        )}
         <SignOutButton />
       </div>
     </div>

@@ -62,6 +62,7 @@ export default function LoginPage() {
       surname: userSurname,
       email,
       password,
+      avatar: '',
     };
     addUser(user).then((response) => {
       if (response.success) {
