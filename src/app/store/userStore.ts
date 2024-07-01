@@ -11,7 +11,7 @@ type UserState = {
 }
 
 type UserActions = {
-    get: () => void,
+    get: (userId?: string) => void,
   add: (user: User) => Promise<responseType>,
 }
 
@@ -23,9 +23,10 @@ const defaultInitState: UserState = {
 
 export const useUserStore = create<UserStore>((set) => ({
   ...defaultInitState,
-  get: async () => {
+  get: async (userId) => {
+    const endpoint = userId ? `/api/user?userId=${userId}` : '/api/user';
     try {
-      const response = await fetch('/api/user');
+      const response = await fetch(endpoint);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
