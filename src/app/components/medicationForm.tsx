@@ -10,7 +10,9 @@ import {
 } from 'react';
 import { DateValue, parseDate } from '@internationalized/date';
 import { v4 } from 'uuid';
-import { useDiseaseStore, useElderStore, useMedicationStore } from '../store';
+import {
+  useAllergyStore, useDiseaseStore, useElderStore, useMedicationStore,
+} from '../store';
 import { Medication } from '../api/medications/types';
 
 interface MedicationFormProps {
@@ -49,10 +51,17 @@ export default function MedicationForm({ id }: MedicationFormProps) {
     medications: state.medications,
   }));
 
-  const { getDisease, diseases } = useDiseaseStore((state) => ({
-    getDisease: state.get,
+  const { getDiseases, diseases } = useDiseaseStore((state) => ({
+    getDiseases: state.get,
     diseases: state.diseases,
   }));
+
+  const { getAllergies, allergies } = useAllergyStore((state) => ({
+    getAllergies: state.get,
+    allergies: state.allergies,
+  }));
+
+  const getConditionsList = () => [...diseases, ...allergies];
 
   function validateForm() {
     // Check for empty or null values
@@ -124,8 +133,12 @@ export default function MedicationForm({ id }: MedicationFormProps) {
       getMedications(elder.id);
     }
     if (elder && !diseases) {
-      getDisease(elder.id);
+      getDiseases(elder.id);
     }
+    if (elder && !allergies) {
+      getAllergies(elder.id);
+    }
+
     if (id && medications) {
       const medication = medications.find((medication: Medication) => medication.id === id);
       if (medication) {
@@ -140,7 +153,7 @@ export default function MedicationForm({ id }: MedicationFormProps) {
         setFavorite(medication.favorite);
       }
     }
-  }, [id, elder, getMedications, medications, getDisease, diseases]);
+  }, [id, elder, getMedications, medications, getDiseases, diseases, getAllergies, allergies]);
 
   return (
     (
@@ -218,9 +231,9 @@ export default function MedicationForm({ id }: MedicationFormProps) {
                     selectedKeys={diseaseId}
                     onSelectionChange={setDiseaseId}
                   >
-                    {diseases.map((disease) => (
-                      <SelectItem key={disease.id}>
-                        {disease.name}
+                    {getConditionsList().map((condition) => (
+                      <SelectItem key={condition.id}>
+                        {condition.name}
                       </SelectItem>
                     ))}
                   </Select>

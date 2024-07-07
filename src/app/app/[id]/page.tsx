@@ -188,7 +188,7 @@ function Page() {
                   <div>
                     {allergies && allergies.length > 0 ? (
                       allergies.map((allergy) => (
-                        <p key={allergy.id} className="text-lg font-medium text-zinc-900 text-pretty">{allergy.detail}</p>
+                        <p key={allergy.id} className="text-lg font-medium text-zinc-900 text-pretty">{allergy.name}</p>
                       ))
                     ) : (
                       <p className="text-lg font-medium text-zinc-900 text-pretty">No tiene alergias registradas</p>
