@@ -68,17 +68,17 @@ function Page() {
     <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] px-4 md:px-8 relative">
       <header className="flex justify-between mb-4 pt-10">
         <div className="flex items-center">
-          <Pill color="#006FEE" size={32} className="mr-2" />
-          <p className="text-2xl font-medium">Medicamentos</p>
+          <Pill color="#006FEE" className="text-xl lg:text-3xl mr-[2px] lg:mr-2" />
+          <p className="text-base lg:text-2xl font-medium">Medicamentos</p>
         </div>
         <FormModal type="medication" />
       </header>
       {medications.length === 0 ? (
         <div className="flex justify-center items-center w-full h-[calc(100%-96px)]">
-          <p className="text-xl">Aún no tiene medicamentos registrados</p>
+          <p className="text-xl text-center">Aún no tiene medicamentos registrados</p>
         </div>
       ) : (
-        <article className="grid grid-cols-2 gap-4">
+        <article className="grid grid-cols-2 gap-4 pb-10">
           {medications.map((medication) => (
             <section key={medication.id} className="col-span-2 lg:col-span-1">
               <Card title={medication.name} type="medication" edit remove like id={medication.id}>
