@@ -6,10 +6,11 @@ import {
 import { Pencil, Plus } from '@phosphor-icons/react/dist/ssr';
 import ElderForm from './elderForm';
 import MedicationForm from './medicationForm';
+import ConditionForm from './conditionForm';
 
 type FormModalProps = {
   id?: string,
-  type: 'elder' | 'medication' | 'taste' | 'contact' | 'comment';
+  type: 'elder' | 'medication' | 'condition' | 'taste' | 'contact' | 'comment';
 }
 
 export default function FormModal({ id, type }: FormModalProps) {
@@ -21,6 +22,8 @@ export default function FormModal({ id, type }: FormModalProps) {
         return 'abuelito';
       case 'medication':
         return 'medicamento';
+      case 'condition':
+        return 'condición';
       case 'taste':
         return 'gusto';
       case 'contact':
@@ -42,6 +45,7 @@ export default function FormModal({ id, type }: FormModalProps) {
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
             {type === 'elder' && (<ElderForm elderId={id} />)}
             {type === 'medication' && (<MedicationForm id={id} />)}
+            {type === 'condition' && (<ConditionForm id={id} />)}
           </Modal>
         </>
       ) : (
@@ -53,6 +57,7 @@ export default function FormModal({ id, type }: FormModalProps) {
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
             {type === 'elder' && (<ElderForm />)}
             {type === 'medication' && (<MedicationForm />)}
+            {type === 'condition' && (<ConditionForm />)}
           </Modal>
         </>
       )}

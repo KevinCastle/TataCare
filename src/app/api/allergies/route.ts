@@ -19,22 +19,53 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const requestBody = await request.json();
-    const { allergy } = requestBody;
+    const allergy = await request.json();
 
-    const keys = Object.keys(allergy).join(', ');
-    const values = Object.values(allergy).join(', ');
+    const keys = (Object.keys(allergy)).join(', ');
+    const placeholders = Object.keys(allergy).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(allergy);
 
-    const result = await sql<Allergy>`
-      INSERT INTO allergies (${keys})
-        VALUES (${values})
+    const query = `
+      INSERT INTO allergy (${keys})
+      VALUES (${placeholders})
+      RETURNING *;
     `;
+    const data = await sql.query<Allergy>(query, values);
+
+    return new Response(JSON.stringify(data.rows), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (err) {
+    throw new Error('Failed to create allergy.');
+  }
+}
+
+export async function POST(request: NextRequest) {
+  noStore();
+
+  try {
+    const requestBody = await request.json();
+
+    const { id, ...allergyData } = requestBody;
+    const updates = Object.keys(allergyData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
+    const values = Object.values(allergyData);
+    values.unshift(id);
+
+    const query = `
+      UPDATE allergy
+      SET ${updates}
+      WHERE id = $1
+      RETURNING *;
+    `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to create allergy.');
+    throw new Error(`Failed to edit medication. ${err}`);
   }
 }
 

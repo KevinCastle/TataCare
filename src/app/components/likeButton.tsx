@@ -6,7 +6,7 @@ import { useMedicationStore } from '../store';
 
 interface LikeButtonProps {
   id: string;
-  type: 'elder' | 'medication' | 'taste' | 'contact' | 'comment';
+  type: 'elder' | 'medication' | 'condition' | 'taste' | 'contact' | 'comment';
 }
 
 function LikeButton({ id, type }: LikeButtonProps) {

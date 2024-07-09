@@ -12,7 +12,7 @@ import {
 
 type DeleteModalProps = {
   id: string,
-  type: 'elder' | 'medication' | 'taste' | 'contact' | 'comment';
+  type: 'elder' | 'medication' | 'condition' | 'taste' | 'contact' | 'comment';
 }
 
 export default function DeleteModal({ id, type }: DeleteModalProps) {

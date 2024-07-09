@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Disease } from '../api/diseases/types';
 
 type DiseaseState = {
@@ -9,6 +8,7 @@ type DiseaseState = {
 type DiseaseActions = {
     get: (elderId: string) => void,
     add: (disease: Disease) => void,
+  edit: (disease: Disease) => void,
     remove: (disease: Disease) => void
 }
 
@@ -18,7 +18,7 @@ const defaultInitState: DiseaseState = {
   diseases: [],
 };
 
-export const useDiseaseStore = create<DiseaseStore>((set) => ({
+export const useDiseaseStore = create<DiseaseStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -44,8 +44,26 @@ export const useDiseaseStore = create<DiseaseStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(disease.elder_id);
     } catch (error) {
       throw new Error('Failed to update disease:');
+    }
+  },
+  edit: async (disease: Disease) => {
+    try {
+      const response = await fetch('/api/diseases', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(disease),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      get().get(disease.elder_id);
+    } catch (error) {
+      throw new Error(`Failed to update disease, ${error}`);
     }
   },
   remove: async (disease: Disease) => {
@@ -60,7 +78,7 @@ export const useDiseaseStore = create<DiseaseStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(disease.elder_id);
+      await get().get(disease.elder_id);
     } catch (error) {
       throw new Error('Failed to update disease:');
     }
