@@ -50,8 +50,8 @@ export default function FormModal({ id, type }: FormModalProps) {
         </>
       ) : (
         <>
-          <Button color="primary" type="button" onPress={onOpen}>
-            <Plus size={20} weight="bold" />
+          <Button color="primary" size="sm" type="button" onPress={onOpen} className="px-2 lg:px-3">
+            <Plus size={20} weight="bold" className="hidden lg:block" />
             <span>{`Agregar ${translateType()}`}</span>
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">

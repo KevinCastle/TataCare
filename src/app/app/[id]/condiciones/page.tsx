@@ -69,17 +69,20 @@ function Page() {
       <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] px-4 md:px-8 relative">
         <header className="flex justify-between mb-4 pt-10">
           <div className="flex items-center">
-            <Heartbeat color="#006FEE" size={32} className="mr-2" />
-            <p className="text-2xl font-medium">Condiciones de Salud</p>
+            <Heartbeat color="#006FEE" className="text-xl lg:text-3xl mr-[2px] lg:mr-2" />
+            <p className="text-base lg:text-2xl font-medium">
+              Condiciones
+              <span className="hidden lg:inline"> de Salud</span>
+            </p>
           </div>
           <FormModal type="condition" />
         </header>
         {diseases.length === 0 && allergies.length === 0 ? (
           <div className="flex justify-center items-center w-full h-[calc(100%-96px)]">
-            <p className="text-xl">Aún no tiene condiciones de salud registradas</p>
+            <p className="text-xl text-center">Aún no tiene condiciones de salud registradas</p>
           </div>
         ) : (
-          <article className="grid grid-cols-2 gap-4">
+          <article className="grid grid-cols-2 gap-4 pb-10">
             {getConditions().map((condition) => (
               <section key={condition.id} className="col-span-2 lg:col-span-1">
                 <Card
