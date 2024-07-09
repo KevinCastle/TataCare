@@ -1,7 +1,11 @@
 'use client';
 
-import { useDiseaseStore, useElderStore, useMedicationStore } from '@/app/store';
-import { Pill, Prescription, Storefront } from '@phosphor-icons/react/dist/ssr';
+import {
+  useAllergyStore, useDiseaseStore, useElderStore, useMedicationStore,
+} from '@/app/store';
+import {
+  Pill, Prescription, Storefront, Virus,
+} from '@phosphor-icons/react/dist/ssr';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Card from '@/app/components/card';
@@ -21,9 +25,14 @@ function Page() {
     medications: state.medications,
   }));
 
-  const { getDisease, diseases } = useDiseaseStore((state) => ({
-    getDisease: state.get,
+  const { getDiseases, diseases } = useDiseaseStore((state) => ({
+    getDiseases: state.get,
     diseases: state.diseases,
+  }));
+
+  const { getAllergies, allergies } = useAllergyStore((state) => ({
+    getAllergies: state.get,
+    allergies: state.allergies,
   }));
 
   const getTodayDate = () => {
@@ -31,9 +40,11 @@ function Page() {
     return today.toISOString().slice(0, 10);
   };
 
-  const getDiseaseName = (diseaseId: string) => {
-    const disease = diseases.find((d) => d.id === diseaseId);
-    return disease ? disease.name : '';
+  const getConditions = (diseaseId: string) => {
+    const conditions = [...diseases.map((disease) => ({ ...disease, type: 'disease' })),
+      ...allergies.map((allergy) => ({ ...allergy, type: 'allergy' }))];
+    const condition = conditions.find((condition) => condition.id === diseaseId);
+    return condition ? { name: condition.name, type: condition.type } : { name: '', type: '' };
   };
 
   useEffect(() => {
@@ -45,10 +56,13 @@ function Page() {
         getMedications(elderId);
       }
       if (elder && diseases.length === 0) {
-        getDisease(elder.id);
+        getDiseases(elder.id);
+      }
+      if (elder && allergies.length === 0) {
+        getAllergies(elder.id);
       }
     }
-  }, [elder, elderId, getElder, getMedications, getDisease, diseases, medications]);
+  }, [elder, elderId, getElder, getMedications, getDiseases, diseases, medications, getAllergies, allergies]);
 
   return (
     <main className="h-[calc(100vh-64px)] lg:h-[calc(100vh-32px)] 2xl:h-[calc(100vh-64px)] px-4 md:px-8 relative">
@@ -60,7 +74,9 @@ function Page() {
         <FormModal type="medication" />
       </header>
       {medications.length === 0 ? (
-        <p>No tiene medicinas registradas</p>
+        <div className="flex justify-center items-center w-full h-[calc(100%-96px)]">
+          <p className="text-xl">Aún no tiene medicamentos registrados</p>
+        </div>
       ) : (
         <article className="grid grid-cols-2 gap-4">
           {medications.map((medication) => (
@@ -95,8 +111,12 @@ function Page() {
                       <div className="col-span-1">
                         <p className="font-medium text-zinc-600">Recetado para</p>
                         <div className="flex gap-1">
-                          <Prescription size={20} color="#C20E4D" className="mt-1" weight="bold" />
-                          <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{getDiseaseName(medication.disease_id)}</p>
+                          {getConditions(medication.disease_id).type === 'allergy' ? (
+                            <Virus size={20} color="#0E793C" className="mt-1" weight="bold" />
+                          ) : (
+                            <Prescription size={20} color="#C20E4D" className="mt-1" weight="bold" />
+                          )}
+                          <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{getConditions(medication.disease_id).name}</p>
                         </div>
                       </div>
                     )}

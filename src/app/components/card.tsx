@@ -11,7 +11,7 @@ interface CardProps {
     title?: string;
     avatar?: string;
     icon?: ReactNode;
-    type?: 'elder' | 'medication' | 'taste' | 'contact' | 'comment';
+    type?: 'elder' | 'medication' | 'condition' | 'taste' | 'contact' | 'comment';
     edit?: boolean;
     remove?: boolean;
     like?: boolean;

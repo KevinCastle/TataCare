@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Allergy } from '../api/allergies/types';
 
 type AllergyState = {
@@ -8,7 +7,8 @@ type AllergyState = {
 
 type AllergyActions = {
     get: (elderId: string) => void,
-    add: (allergy: Allergy) => void,
+  add: (allergy: Allergy) => void,
+  edit: (allergy: Allergy) => void,
     remove: (allergy: Allergy) => void
 }
 
@@ -18,7 +18,7 @@ const defaultInitState: AllergyState = {
   allergies: [],
 };
 
-export const useAllergyStore = create<AllergyStore>((set) => ({
+export const useAllergyStore = create<AllergyStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -44,8 +44,26 @@ export const useAllergyStore = create<AllergyStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(allergy.elder_id);
     } catch (error) {
       throw new Error('Failed to update allergy:');
+    }
+  },
+  edit: async (allergy: Allergy) => {
+    try {
+      const response = await fetch('/api/allergies', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(allergy),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      get().get(allergy.elder_id);
+    } catch (error) {
+      throw new Error(`Failed to update allergy, ${error}`);
     }
   },
   remove: async (allergy: Allergy) => {
@@ -60,7 +78,7 @@ export const useAllergyStore = create<AllergyStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(allergy.elder_id);
+      await get().get(allergy.elder_id);
     } catch (error) {
       throw new Error('Failed to update allergy:');
     }

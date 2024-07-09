@@ -32,8 +32,8 @@ export default function ElderCardList({ elders }: ElderCardListProps) {
                 radius="lg"
                 width="100%"
                 alt={fullName(elder.name, elder.surname)}
-                className="w-full object-cover object-top h-[200px]"
-                src="https://images.unsplash.com/photo-1612838320302-4b3b3b3b3b3b"
+                className="w-full object-cover object-top h-[270px]"
+                src={elder.avatar}
               />
             </CardBody>
             <CardFooter className="text-small justify-between">

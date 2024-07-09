@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { PutBlobResult } from '@vercel/blob';
 import { Elder } from '../api/elders/types';
 
 type ElderState = {
@@ -11,7 +12,8 @@ type ElderActions = {
   getElder: (id: string) => void,
   add: (elder: Elder) => void,
   edit: (id: string, elder: Elder) => void,
-  remove: (id: string) => void
+  remove: (id: string) => void,
+  uploadImage: (image: File) => Promise<PutBlobResult>
 }
 
 type ElderStore = ElderState & ElderActions
@@ -92,6 +94,23 @@ export const useElderStore = create<ElderStore>((set, get) => ({
       set({ selectedElder: null });
     } catch (error) {
       throw new Error('Failed to update elder');
+    }
+  },
+  uploadImage: async (image: File) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', image);
+      const response = await fetch(`/api/avatar?filename=${image.name}`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const newBlob = (await response.json()) as PutBlobResult;
+      return newBlob;
+    } catch (error) {
+      throw new Error('Failed to upload image');
     }
   },
 }));

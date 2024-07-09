@@ -12,4 +12,5 @@ export type Elder = {
     identification_number: string;
     kidney_failure: boolean;
     urinary_incontinence: boolean;
+    avatar: string;
 };

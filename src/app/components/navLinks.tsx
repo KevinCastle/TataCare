@@ -17,7 +17,7 @@ export default function NavLinks() {
   const links = [
     { name: 'Ficha', href: '/', icon: IdentificationCard },
     { name: 'Medicamentos', href: '/medicamentos', icon: Pill },
-    { name: 'Detalles de salud', href: '/salud', icon: Heartbeat },
+    { name: 'Condiciones de salud', href: '/condiciones', icon: Heartbeat },
     { name: 'Contactos de emergencia', href: '/contactos', icon: Siren },
     { name: 'Gustos', href: '/gustos', icon: Heart },
     { name: 'Comentarios', href: '/comentarios', icon: ChatCircle },

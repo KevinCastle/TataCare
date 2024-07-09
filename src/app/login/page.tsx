@@ -11,15 +11,17 @@ import {
 import { Button, Input } from '@nextui-org/react';
 import { authenticate } from '@/app/api/user/actions';
 import { useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [errorMessage, formAction, isPending] = useFormState(authenticate, undefined);
+  const [errorMessage, formAction] = useFormState(authenticate, undefined);
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
+  const { pending } = useFormStatus();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -45,6 +47,8 @@ export default function LoginPage() {
                 label="Correo electrónico"
                 color="primary"
                 placeholder="Ingrese su correo electrónico"
+                id="email"
+                name="email"
                 value={email}
                 onValueChange={setEmail}
                 startContent={(
@@ -56,6 +60,8 @@ export default function LoginPage() {
                 label="Contraseña"
                 color="primary"
                 placeholder="Ingrese su contraseña"
+                id="password"
+                name="password"
                 value={password}
                 onValueChange={setPassword}
                 endContent={(
@@ -77,7 +83,7 @@ export default function LoginPage() {
                 <p className="text-sm text-red-500 ml-2">{errorMessage}</p>
               </div>
             )}
-            <Button color="primary" type="submit" className="mt-4 w-full" isDisabled={isPending}>
+            <Button color="primary" type="submit" className="mt-4 w-full" isDisabled={pending}>
               Inicio de sesión
               {' '}
               <ArrowRight size={20} className="ml-auto text-gray-50" />

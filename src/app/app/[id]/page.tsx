@@ -11,6 +11,8 @@ import {
   MapPinSimple,
   Prescription,
   ChatCircle,
+  Files,
+  Siren,
 } from '@phosphor-icons/react/dist/ssr';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -99,7 +101,7 @@ function Page() {
         <article className="lg:grid lg:grid-cols-12 lg:grid-rows-2 lg:gap-4 mt-3 lg:mt-0">
           <section id="personal-data" className="lg:col-span-7 lg:row-span-1 mt-3 lg:mt-0">
             <Card
-              avatar="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+              avatar={elder.avatar}
               title={`${elder.name} ${elder.surname}`}
               type="elder"
               edit
@@ -186,7 +188,7 @@ function Page() {
                   <div>
                     {allergies && allergies.length > 0 ? (
                       allergies.map((allergy) => (
-                        <p key={allergy.id} className="text-lg font-medium text-zinc-900 text-pretty">{allergy.detail}</p>
+                        <p key={allergy.id} className="text-lg font-medium text-zinc-900 text-pretty">{allergy.name}</p>
                       ))
                     ) : (
                       <p className="text-lg font-medium text-zinc-900 text-pretty">No tiene alergias registradas</p>
@@ -222,7 +224,7 @@ function Page() {
             <section id="legal-data" className="lg: col-span-1 mt-3 lg:mt-0">
               <Card
                 title="Información Legal"
-                icon={<Heartbeat size={32} weight="bold" color="#F31260" />}
+                icon={<Files size={32} weight="bold" color="#71717a" />}
               >
                 <div id="nacionality" className="mb-5">
                   <p className="font-medium text-zinc-600">Nacionalidad</p>
@@ -250,7 +252,7 @@ function Page() {
             <section id="contact-data" className="lg: col-span-1 mt-3 lg:mt-0">
               <Card
                 title="Contacto de emergencia"
-                icon={<Heartbeat size={32} weight="bold" color="#F31260" />}
+                icon={<Siren size={32} weight="bold" color="#f5a524" />}
               >
                 {contacts && contacts.length > 0 ? (
                   contacts.map((contact) => (

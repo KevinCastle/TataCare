@@ -1,26 +1,32 @@
 import { User } from '@/app/api/user/types';
 import { auth } from '@/auth';
 import { sql } from '@vercel/postgres';
-import { NextRequest } from 'next/server';
 import bcrypt from 'bcrypt';
+import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
-    const email = searchParams.get('email');
-    if (!email) {
-      const session = await auth();
-
-      if (!session?.user) {
+    const userId = searchParams.get('userId');
+    if (userId) {
+      const data = await sql`SELECT * FROM users WHERE id=${userId}`;
+      if (data.rowCount === 0) {
         return new Response('User not found', { status: 404 });
       }
-
-      return new Response(JSON.stringify(session.user), {
+      const user = data.rows[0] as User;
+      return new Response(JSON.stringify(user), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       });
     }
-    const data = await sql`SELECT * FROM users WHERE email=${email}`;
+
+    const session = await auth();
+
+    if (!session?.user) {
+      return new Response('User not found', { status: 404 });
+    }
+
+    const data = await sql`SELECT * FROM users WHERE email=${session.user.email}`;
     if (data.rowCount === 0) {
       return new Response('User not found', { status: 404 });
     }
