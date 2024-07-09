@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Taste } from '../api/tastes/types';
 
 type TasteState = {
@@ -19,7 +18,7 @@ const defaultInitState: TasteState = {
   tastes: [],
 };
 
-export const useTasteStore = create<TasteStore>((set) => ({
+export const useTasteStore = create<TasteStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -45,8 +44,9 @@ export const useTasteStore = create<TasteStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(taste.elder_id);
     } catch (error) {
-      throw new Error('Failed to update taste:');
+      throw new Error('Failed to update taste');
     }
   },
   edit: async (taste: Taste) => {
@@ -61,6 +61,7 @@ export const useTasteStore = create<TasteStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(taste.elder_id);
     } catch (error) {
       throw new Error('Failed to update elder:');
     }
@@ -77,7 +78,7 @@ export const useTasteStore = create<TasteStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(taste.elder_id);
+      await get().get(taste.elder_id);
     } catch (error) {
       throw new Error('Failed to update taste:');
     }

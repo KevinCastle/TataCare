@@ -18,6 +18,7 @@ interface CardProps {
     id?: string;
     children: ReactNode;
     footerContent?: ReactNode;
+    className?: string;
 }
 
 const card: React.FC<CardProps> = ({
@@ -31,8 +32,9 @@ const card: React.FC<CardProps> = ({
   id,
   children,
   footerContent,
+  className,
 }) => (
-  <Card className="h-full w-full">
+  <Card className={`h-full w-full ${className}`}>
     {title && (
     <CardHeader className="flex gap-3">
         {avatar && !icon && <Avatar showFallback src={avatar} />}

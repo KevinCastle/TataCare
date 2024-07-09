@@ -19,18 +19,20 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const requestBody = await request.json();
-    const { taste } = requestBody;
+    const taste = await request.json();
 
-    const keys = Object.keys(taste).join(', ');
-    const values = Object.values(taste).join(', ');
+    const keys = (Object.keys(taste)).join(', ');
+    const placeholders = Object.keys(taste).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(taste);
 
-    const result = await sql<Taste>`
-      INSERT INTO tastes (${keys})
-        VALUES (${values})
+    const query = `
+      INSERT INTO taste (${keys})
+      VALUES (${placeholders})
+      RETURNING *;
     `;
+    const data = await sql.query<Taste>(query, values);
 
-    return new Response(JSON.stringify(result.rows[0]), {
+    return new Response(JSON.stringify(data.rows), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
@@ -43,23 +45,27 @@ export async function POST(request: NextRequest) {
 
   try {
     const requestBody = await request.json();
-    const { taste } = requestBody;
 
-    const { id, ...tasteData } = taste;
-    const keys = Object.keys(tasteData);
+    const { id, ...tasteData } = requestBody;
+    const updates = Object.keys(tasteData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
     const values = Object.values(tasteData);
-    const updates = keys.map((key, index) => `${key} = ${values[index]}`).join(', ');
-    const result = await sql<Taste>`
+    values.unshift(id);
+
+    const query = `
       UPDATE taste
       SET ${updates}
-      WHERE id=${id}
+      WHERE id = $1
+      RETURNING *;
     `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to edit taste.');
+    throw new Error(`Failed to edit taste. ${err}`);
   }
 }
 

@@ -7,6 +7,7 @@ import { Pencil, Plus } from '@phosphor-icons/react/dist/ssr';
 import ElderForm from './elderForm';
 import MedicationForm from './medicationForm';
 import ConditionForm from './conditionForm';
+import TasteForm from './tasteForm';
 
 type FormModalProps = {
   id?: string,
@@ -46,6 +47,7 @@ export default function FormModal({ id, type }: FormModalProps) {
             {type === 'elder' && (<ElderForm elderId={id} />)}
             {type === 'medication' && (<MedicationForm id={id} />)}
             {type === 'condition' && (<ConditionForm id={id} />)}
+            {type === 'taste' && (<TasteForm id={id} />)}
           </Modal>
         </>
       ) : (
@@ -58,6 +60,7 @@ export default function FormModal({ id, type }: FormModalProps) {
             {type === 'elder' && (<ElderForm />)}
             {type === 'medication' && (<MedicationForm />)}
             {type === 'condition' && (<ConditionForm />)}
+            {type === 'taste' && (<TasteForm />)}
           </Modal>
         </>
       )}
