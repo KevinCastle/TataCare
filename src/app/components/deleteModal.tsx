@@ -7,7 +7,8 @@ import {
 import { Trash } from '@phosphor-icons/react/dist/ssr';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  useCommentStore, useContactStore, useElderStore, useMedicationStore, useTasteStore,
+  useAllergyStore,
+  useCommentStore, useContactStore, useDiseaseStore, useElderStore, useMedicationStore, useTasteStore,
 } from '../store';
 
 type DeleteModalProps = {
@@ -37,6 +38,18 @@ export default function DeleteModal({ id, type }: DeleteModalProps) {
     removeMedication: state.remove,
   }));
 
+  const { getDiseases, removeDisease, diseases } = useDiseaseStore((state) => ({
+    getDiseases: state.get,
+    diseases: state.diseases,
+    removeDisease: state.remove,
+  }));
+
+  const { getAllergies, removeAllergy, allergies } = useAllergyStore((state) => ({
+    getAllergies: state.get,
+    allergies: state.allergies,
+    removeAllergy: state.remove,
+  }));
+
   const { getContacts, removeContact, contacts } = useContactStore((state) => ({
     getContacts: state.get,
     contacts: state.contacts,
@@ -60,6 +73,18 @@ export default function DeleteModal({ id, type }: DeleteModalProps) {
         const medication = medications.find((medication) => medication.id === id);
         if (medication) {
           removeMedication(medication);
+        }
+        break;
+      }
+      case 'condition': {
+        const disease = diseases.find((disease) => disease.id === id);
+        if (disease) {
+          removeDisease(disease);
+        } else {
+          const allergy = allergies.find((allergy) => allergy.id === id);
+          if (allergy) {
+            removeAllergy(allergy);
+          }
         }
         break;
       }
@@ -91,27 +116,44 @@ export default function DeleteModal({ id, type }: DeleteModalProps) {
 
   useEffect(() => {
     setElderId(pathname.split('/')[2]);
-    switch (type) {
-      case 'medication': {
-        getMedications(elderId);
-        break;
+    if (elderId) {
+      switch (type) {
+        case 'medication': {
+          getMedications(elderId);
+          break;
+        }
+        case 'condition': {
+          getAllergies(elderId);
+          getDiseases(elderId);
+          break;
+        }
+        case 'taste': {
+          getTastes(elderId);
+          break;
+        }
+        case 'contact': {
+          getContacts(elderId);
+          break;
+        }
+        case 'comment': {
+          getComments(elderId);
+          break;
+        }
+        default:
+          break;
       }
-      case 'taste': {
-        getTastes(elderId);
-        break;
-      }
-      case 'contact': {
-        getContacts(elderId);
-        break;
-      }
-      case 'comment': {
-        getComments(elderId);
-        break;
-      }
-      default:
-        break;
     }
-  }, [id, type, pathname, getMedications, getTastes, getContacts, getComments, setElderId, elderId]);
+  }, [id,
+    type,
+    pathname,
+    getMedications,
+    getTastes,
+    getContacts,
+    getComments,
+    getDiseases,
+    getAllergies,
+    setElderId,
+    elderId]);
 
   return (
     <div>
