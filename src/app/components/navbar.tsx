@@ -19,8 +19,8 @@ export default function Navbar() {
   }, [getUser, user]);
 
   return (
-    <div className="bg-white flex flex-col px-3 py-4 lg:px-2 lg:h-full">
-      <div className="flex justify-between items-center lg:justify-start">
+    <div className="bg-white flex flex-col px-3 py-1 lg:py-4 lg:px-2 lg:h-full">
+      <div className="flex justify-between items-center lg:justify-start order-1">
         <Link
           className="mb-2 flex border-b border-solid border-zinc-100 py-4 px-3"
           href="/"
@@ -31,16 +31,16 @@ export default function Navbar() {
           <SignOutButton />
         </div>
       </div>
-      <div className="flex grow flex-row justify-between space-x-2 lg:flex-col lg:justify-start lg:space-x-0 lg:space-y-4">
+      <div className="flex grow flex-row justify-between space-x-0 lg:flex-col lg:justify-start lg:space-y-4 overflow-x-auto order-3 lg:order-2">
         <NavLinks />
       </div>
-      <div className="mt-auto border-t lg:border-t-0 lg:border-b border-solid border-zinc-200  pt-2 lg:pt-0 lg:pb-2">
+      <div className="mt-auto border-b border-solid border-zinc-200 mb-2 lg:pb-2 order-2 lg:order-3">
         <Link isBlock href="/" color="foreground" className="font-medium flex h-[48px] grow items-center justify-center lg:flex-none lg:justify-start p-3 lg:p-2">
           <ArrowUUpLeft color="#71717A" size={24} className="mr-2" />
           Elegir otro abuelito
         </Link>
       </div>
-      <div className="hidden lg:flex items-center gap-x-3 p-2 pt-4">
+      <div className="hidden lg:flex items-center gap-x-3 p-2 pt-4 order-4">
         {user && (
           <>
             <Avatar showFallback src={user.avatar} />

@@ -17,8 +17,8 @@ export default function NavLinks() {
   const links = [
     { name: 'Ficha', href: '/', icon: IdentificationCard },
     { name: 'Medicamentos', href: '/medicamentos', icon: Pill },
-    { name: 'Condiciones de salud', href: '/condiciones', icon: Heartbeat },
-    { name: 'Contactos de emergencia', href: '/contactos', icon: Siren },
+    { name: 'Condiciones', href: '/condiciones', icon: Heartbeat },
+    { name: 'Contactos', href: '/contactos', icon: Siren },
     { name: 'Gustos', href: '/gustos', icon: Heart },
     { name: 'Comentarios', href: '/comentarios', icon: ChatCircle },
   ];
@@ -39,8 +39,8 @@ export default function NavLinks() {
               },
             )}
           >
-            <LinkIcon size={24} className="lg:mr-2" color="#006FEE" />
-            <p className={clsx('text-sm lg:text-lg font-medium text-center lg:text-start', { 'text-blue-600': route === link.href, 'text-zinc-900': route !== link.href })}>
+            <LinkIcon className="text-xl lg:text-2xl lg:mr-2" color="#006FEE" />
+            <p className={clsx('text-xs lg:text-lg font-medium text-center lg:text-start', { 'text-blue-600': route === link.href, 'text-zinc-900': route !== link.href })}>
               {link.name}
             </p>
           </Link>
