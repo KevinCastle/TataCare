@@ -15,17 +15,19 @@ import {
   Siren,
 } from '@phosphor-icons/react/dist/ssr';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getBloodTypeCompatibility, getAge, getBirthdate } from '@/app/utils';
 import {
   useElderStore, useAllergyStore, useDiseaseStore, useMedicationStore, useContactStore, useCommentStore,
 } from '@/app/store';
+import { Contact } from '@/app/api/contacts/types';
 import Card from '../../components/card';
 import CommentCard from '../../components/commentCard';
 
 function Page() {
   const pathname = usePathname();
   const elderId = pathname.split('/').pop();
+  const [contact, setContact] = useState<Contact | null>(null);
   const { getElder, selectedElder: elder } = useElderStore((state) => ({
     getElder: state.getElder,
     selectedElder: state.selectedElder,
@@ -60,16 +62,26 @@ function Page() {
     if (elderId) {
       if (!elder && elderId) {
         getElder(elderId);
-      }
-      if (elder) {
         getAllergies(elderId);
         getDiseases(elderId);
         getMedications(elderId);
         getContacts(elderId);
         getLastComment(elderId);
       }
+      if (contacts && elder) {
+        setContact(contacts.find((contact) => contact.id === elder.favorite_contact) || null);
+      }
     }
-  }, [elder, elderId, getElder, getAllergies, getDiseases, getMedications, getContacts, getLastComment]);
+  }, [elder,
+    elderId,
+    getElder,
+    getAllergies,
+    getDiseases,
+    getMedications,
+    getContacts,
+    getLastComment,
+    contacts,
+  ]);
 
   function getConditions(isPresented : boolean) {
     if (!elder) return [];
@@ -254,32 +266,30 @@ function Page() {
                 title="Contacto de emergencia"
                 icon={<Siren size={32} weight="bold" color="#f5a524" />}
               >
-                {contacts && contacts.length > 0 ? (
-                  contacts.map((contact) => (
-                    <div key={contact.id}>
-                      <div id="nacionality" className="mb-5">
-                        <p className="font-medium text-zinc-600">Doctor</p>
-                        <div className="flex items-center">
-                          <UserSquare size={20} color="#006FEE" />
-                          <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{contact.name}</p>
-                        </div>
-                      </div>
-                      <div id="identification" className="mb-5">
-                        <p className="font-medium text-zinc-600">Número de teléfono</p>
-                        <div className="flex items-center">
-                          <Phone size={20} color="#006FEE" />
-                          <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{contact.phone}</p>
-                        </div>
-                      </div>
-                      <div id="prevision" className="mb-5">
-                        <p className="font-medium text-zinc-600">Dirección</p>
-                        <div className="flex items-center">
-                          <MapPinSimple size={20} color="#006FEE" />
-                          <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{contact.address}</p>
-                        </div>
+                {contacts && contact ? (
+                  <div key={contact.id}>
+                    <div id="nacionality" className="mb-5">
+                      <p className="font-medium text-zinc-600">Doctor</p>
+                      <div className="flex items-center">
+                        <UserSquare size={20} color="#006FEE" />
+                        <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{contact.name}</p>
                       </div>
                     </div>
-                  ))
+                    <div id="identification" className="mb-5">
+                      <p className="font-medium text-zinc-600">Número de teléfono</p>
+                      <div className="flex items-center">
+                        <Phone size={20} color="#006FEE" />
+                        <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{contact.phone}</p>
+                      </div>
+                    </div>
+                    <div id="prevision" className="mb-5">
+                      <p className="font-medium text-zinc-600">Dirección</p>
+                      <div className="flex items-center">
+                        <MapPinSimple size={20} color="#006FEE" />
+                        <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{contact.address}</p>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <p className="text-lg font-medium text-zinc-900 text-pretty">No hay contactos de emergencia registrados</p>
                 )}

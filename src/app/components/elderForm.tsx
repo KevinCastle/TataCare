@@ -37,6 +37,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
   const onCloseRef: MutableRefObject<(() => void) | null> = useRef<(() => void) | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
+  const [favoriteContact, setFavoriteContact] = useState<string>('');
   const genres = [
     {
       key: 'masculino',
@@ -123,6 +124,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       kidney_failure: conditions.includes('kidney_failure'),
       urinary_incontinence: conditions.includes('urinary_incontinence'),
       avatar: blob?.url || '',
+      favorite_contact: favoriteContact,
     };
 
     if (elder) {
@@ -150,6 +152,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       setNationality(new Set([elder.nationality]));
       setIdentityNumber(elder.identification_number);
       setHealthPrevision(new Set([elder.insurance]));
+      setFavoriteContact(elder.favorite_contact);
       const conditions = [
         { label: 'diabetic', is_presented: elder.diabetic },
         { label: 'hypertensive', is_presented: elder.hypertensive },

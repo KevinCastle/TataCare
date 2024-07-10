@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Contact } from '../api/contacts/types';
 
 type ContactState = {
@@ -19,7 +18,7 @@ const defaultInitState: ContactState = {
   contacts: [],
 };
 
-export const useContactStore = create<ContactStore>((set) => ({
+export const useContactStore = create<ContactStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -45,6 +44,7 @@ export const useContactStore = create<ContactStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(contact.elder_id);
     } catch (error) {
       throw new Error('Failed to update contact');
     }
@@ -61,6 +61,7 @@ export const useContactStore = create<ContactStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(contact.elder_id);
     } catch (error) {
       throw new Error('Failed to update contact');
     }
@@ -77,7 +78,7 @@ export const useContactStore = create<ContactStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(contact.elder_id);
+      await get().get(contact.elder_id);
     } catch (error) {
       throw new Error('Failed to update contact');
     }

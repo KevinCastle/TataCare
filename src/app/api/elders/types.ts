@@ -13,4 +13,5 @@ export type Elder = {
     kidney_failure: boolean;
     urinary_incontinence: boolean;
     avatar: string;
+    favorite_contact: string;
 };

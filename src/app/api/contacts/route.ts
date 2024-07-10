@@ -19,18 +19,20 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const requestBody = await request.json();
-    const { contact } = requestBody;
+    const contact = await request.json();
 
-    const keys = Object.keys(contact).join(', ');
-    const values = Object.values(contact).join(', ');
+    const keys = (Object.keys(contact)).join(', ');
+    const placeholders = Object.keys(contact).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(contact);
 
-    const result = await sql<Contact>`
-      INSERT INTO contacts (${keys})
-        VALUES (${values})
+    const query = `
+      INSERT INTO contact (${keys})
+      VALUES (${placeholders})
+      RETURNING *;
     `;
+    const data = await sql.query<Contact>(query, values);
 
-    return new Response(JSON.stringify(result.rows[0]), {
+    return new Response(JSON.stringify(data.rows), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
@@ -43,23 +45,27 @@ export async function POST(request: NextRequest) {
 
   try {
     const requestBody = await request.json();
-    const { contact } = requestBody;
 
-    const { id, ...contactData } = contact;
-    const keys = Object.keys(contactData);
+    const { id, ...contactData } = requestBody;
+    const updates = Object.keys(contactData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
     const values = Object.values(contactData);
-    const updates = keys.map((key, index) => `${key} = ${values[index]}`).join(', ');
-    const result = await sql<Contact>`
+    values.unshift(id);
+
+    const query = `
       UPDATE contact
       SET ${updates}
-      WHERE id=${id}
+      WHERE id = $1
+      RETURNING *;
     `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to edit contact.');
+    throw new Error(`Failed to edit contact. ${err}`);
   }
 }
 
