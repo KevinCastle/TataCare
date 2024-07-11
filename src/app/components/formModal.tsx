@@ -9,6 +9,7 @@ import MedicationForm from './medicationForm';
 import ConditionForm from './conditionForm';
 import TasteForm from './tasteForm';
 import ContactForm from './contactForm';
+import CommentForm from './commentForm';
 
 type FormModalProps = {
   id?: string,
@@ -64,6 +65,7 @@ export default function FormModal({ id, type }: FormModalProps) {
             {type === 'condition' && (<ConditionForm />)}
             {type === 'taste' && (<TasteForm />)}
             {type === 'contact' && (<ContactForm />)}
+            {type === 'comment' && (<CommentForm />)}
           </Modal>
         </>
       )}

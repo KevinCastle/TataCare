@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { get } from 'http';
 import { Comment } from '../api/comments/types';
 
 type CommentState = {
@@ -21,7 +20,7 @@ const defaultInitState: CommentState = {
   lastComment: null,
 };
 
-export const useCommentStore = create<CommentStore>((set) => ({
+export const useCommentStore = create<CommentStore>((set, get) => ({
   ...defaultInitState,
   get: async (elderId) => {
     try {
@@ -30,6 +29,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
         throw new Error('Network response was not ok');
       }
       const comments = await response.json();
+      comments.sort((a: Comment, b: Comment) => new Date(b.date).getTime() - new Date(a.date).getTime());
       set({ comments });
     } catch (error) {
       throw new Error('Failed to fetch comment:');
@@ -59,8 +59,26 @@ export const useCommentStore = create<CommentStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      get().get(comment.elder_id);
     } catch (error) {
       throw new Error('Failed to update comment:');
+    }
+  },
+  edit: async (comment: Comment) => {
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(comment),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      get().get(comment.elder_id);
+    } catch (error) {
+      throw new Error('Failed to update comment');
     }
   },
   remove: async (comment: Comment) => {
@@ -75,7 +93,7 @@ export const useCommentStore = create<CommentStore>((set) => ({
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      await get(comment.elder_id);
+      await get().get(comment.elder_id);
     } catch (error) {
       throw new Error('Failed to update comment:');
     }

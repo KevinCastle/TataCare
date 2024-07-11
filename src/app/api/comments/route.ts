@@ -25,22 +25,53 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const requestBody = await request.json();
-    const { comment } = requestBody;
+    const comment = await request.json();
 
-    const keys = Object.keys(comment).join(', ');
-    const values = Object.values(comment).join(', ');
+    const keys = (Object.keys(comment)).join(', ');
+    const placeholders = Object.keys(comment).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(comment);
 
-    const result = await sql<Comment>`
-      INSERT INTO comments (${keys})
-        VALUES (${values})
+    const query = `
+      INSERT INTO comment (${keys})
+      VALUES (${placeholders})
+      RETURNING *;
     `;
+    const data = await sql.query<Comment>(query, values);
+
+    return new Response(JSON.stringify(data.rows), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (err) {
+    throw new Error('Failed to create comment.');
+  }
+}
+
+export async function POST(request: NextRequest) {
+  noStore();
+
+  try {
+    const requestBody = await request.json();
+
+    const { id, ...commentData } = requestBody;
+    const updates = Object.keys(commentData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+
+    const values = Object.values(commentData);
+    values.unshift(id);
+
+    const query = `
+      UPDATE comment
+      SET ${updates}
+      WHERE id = $1
+      RETURNING *;
+    `;
+
+    const result = await sql.query(query, values);
 
     return new Response(JSON.stringify(result.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to create comment.');
+    throw new Error(`Failed to edit comment. ${err}`);
   }
 }
 

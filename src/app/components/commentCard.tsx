@@ -1,10 +1,16 @@
 import {
   Card, CardHeader, CardBody, Divider,
+  CardFooter,
+  Avatar,
 } from '@nextui-org/react';
 import { useEffect } from 'react';
+import {
+  Smiley, SmileyMeh, SmileyNervous, SmileySad, SmileyWink, Star, ThumbsDown, ThumbsUp,
+} from '@phosphor-icons/react/dist/ssr';
 import { Comment } from '../api/comments/types';
 import { formatDateTime } from '../utils';
 import { useUserStore } from '../store/userStore';
+import DeleteModal from './deleteModal';
 
 interface CommentProps {
   comment: Comment;
@@ -16,41 +22,84 @@ export default function CommentCard({ comment }: CommentProps) {
     user: state.user,
   }));
 
+  const dailyStars = Array.from({ length: 5 }, (_, i) => 5 - i).map((number) => (
+    <Star
+      key={number}
+      size={24}
+      weight="fill"
+      className={`text-yellow-100 ${comment.day_rating >= number && 'text-yellow-500'} mx-2 lg:mx-0`}
+
+    />
+  ));
+
+  const digestionStars = Array.from({ length: 5 }, (_, i) => 5 - i).map((number) => (
+    <Star
+      key={number}
+      size={24}
+      weight="fill"
+      className={`text-yellow-100 ${comment.digestion_rating >= number && 'text-yellow-500'} mx-2 lg:mx-0`}
+    />
+  ));
+
   useEffect(() => {
     if (!user) getUser(comment.caregiver_id);
   }, [getUser, user, comment.caregiver_id]);
 
   return (
-    <Card className="w-full h-fit">
-      <CardHeader className="p-3">
-        <p className="text-xl font-medium">
-          <span className="font-semibold text-zinc-700">{`${user?.name} ${user?.surname}: `}</span>
-          {comment.note}
-        </p>
-      </CardHeader>
-      <Divider />
-      <CardBody className="grid grid-cols-5">
-        <div className="col-span-5 sm:col-span-1 mb-3 sm:mb-0">
-          <p>Día</p>
-          <p>{comment.day_rating}</p>
-        </div>
-        <div className="col-span-5 sm:col-span-1 mb-3 sm:mb-0">
-          <p>Emoción</p>
-          <p>{comment.day_rating}</p>
-        </div>
-        <div className="col-span-5 sm:col-span-1 mb-3 sm:mb-0">
-          <p>Físico</p>
-          <p>{comment.physical_activity ? 'Sí' : 'No'}</p>
-        </div>
-        <div className="col-span-5 sm:col-span-1 mb-3 sm:mb-0">
-          <p>Digestión</p>
-          <p>{comment.digestion_rating}</p>
-        </div>
-        <div className="col-span-5 sm:col-span-1 mb-3 sm:mb-0">
-          <p>Fecha</p>
-          <p>{formatDateTime(comment.date)}</p>
-        </div>
-      </CardBody>
-    </Card>
+    (
+      <Card className="w-full h-fit">
+        <CardHeader className=" p-3">
+          <div className="flex items-center">
+            <Avatar showFallback src={user?.avatar} />
+            <div className="ml-2">
+              <p className="text-xl font-semibold text-zinc-700">
+                {`${user?.name} ${user?.surname}`}
+              </p>
+              <p className="text-zinc-700">{formatDateTime(comment.date)}</p>
+            </div>
+          </div>
+          <div className="ml-auto">
+            {comment.id && <DeleteModal id={comment.id} type="comment" />}
+          </div>
+        </CardHeader>
+        <CardBody className="">
+          <p className="text-lg font-medium">
+            {comment.note}
+          </p>
+        </CardBody>
+        <Divider />
+        <CardFooter className="grid grid-cols-4">
+          <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
+            <p>Día</p>
+            <div className="flex flex-row-reverse justify-center my-2">
+              {dailyStars}
+            </div>
+          </div>
+          <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
+            <p>Emoción</p>
+            <div className="flex flex-row-reverse justify-center my-2">
+              <SmileyWink size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 5 && 'text-green-400'} mx-2 lg:mx-0`} />
+              <Smiley size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 4 && 'text-yellow-300'} mx-2 lg:mx-0`} />
+              <SmileyMeh size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 3 && 'text-yellow-200'} mx-2 lg:mx-0`} />
+              <SmileyNervous size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 2 && 'text-red-200'} mx-2 lg:mx-0`} />
+              <SmileySad size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 1 && 'text-red-400'} mx-2 lg:mx-0`} />
+            </div>
+          </div>
+          <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
+            <p>Digestión</p>
+            <div className="flex flex-row-reverse justify-center my-2">
+              {digestionStars}
+            </div>
+          </div>
+          <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
+            <p>Actividad física</p>
+            <div className="flex justify-center my-2">
+              <ThumbsDown size={24} weight="fill" className={`text-red-500 ${comment.physical_activity && 'text-red-100'} mx-4`} />
+              <ThumbsUp size={24} weight="fill" className={`text-green-500 ${!comment.physical_activity && 'text-green-100'} mx-4`} />
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
+    )
   );
 }
