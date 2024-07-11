@@ -11,11 +11,11 @@ import {
   useContactStore, useElderStore,
 } from '../store';
 
-interface ContactsFormProps {
+interface ContactFormProps {
     id?: string;
 }
 
-export default function ContactsForm({ id }: ContactsFormProps) {
+export default function ContactForm({ id }: ContactFormProps) {
   const [name, setName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [address, setAddress] = useState<string>('');
