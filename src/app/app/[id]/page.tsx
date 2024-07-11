@@ -107,7 +107,11 @@ function Page() {
         <IdentificationCard color="#006FEE" size={32} className="mr-2" />
         <p className="text-2xl font-medium">Ficha</p>
       </header>
-      {!elder && <p>Cargando...</p>}
+      {!elder && (
+        <div className="flex justify-center items-center w-full h-[calc(100%-96px)]">
+          <p className="text-xl text-center">Cargando datos...</p>
+        </div>
+      )}
       {elder && (
       <>
         <article className="lg:grid lg:grid-cols-12 lg:grid-rows-2 lg:gap-4 mt-3 lg:mt-0">
