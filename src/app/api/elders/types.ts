@@ -15,3 +15,9 @@ export type Elder = {
     avatar: string;
     favorite_contact: string;
 };
+
+export type ElderUser = {
+    id: string;
+    elder_id: string;
+    user_id: string;
+};

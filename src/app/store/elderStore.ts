@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { PutBlobResult } from '@vercel/blob';
 import { Elder } from '../api/elders/types';
+import { useUserStore } from './userStore';
 
 type ElderState = {
   elders: Elder[],
@@ -51,12 +52,15 @@ export const useElderStore = create<ElderStore>((set, get) => ({
   },
   add: async (elder: Elder) => {
     try {
+      await useUserStore.getState().get();
+      const userId = useUserStore.getState().user?.id;
+      const body = { elder, userId };
       const response = await fetch('/api/elders', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(elder),
+        body: JSON.stringify(body),
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
