@@ -123,7 +123,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
       identification_number: identityNumber,
       kidney_failure: conditions.includes('kidney_failure'),
       urinary_incontinence: conditions.includes('urinary_incontinence'),
-      avatar: blob?.url || '',
+      avatar: blob?.url || Array.from(genre)[0] === 'Femenino' ? 'https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/9720030-xoT9NQMadRvcvQqunsJPuQCPXXmhat.jpg' : 'https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/9334225-9VwqupjXfrtxYSFZh7tggrr1IsR8oI.jpg',
       favorite_contact: favoriteContact,
     };
 
@@ -285,7 +285,7 @@ export default function ElderForm({ elderId }: ElderFormProps) {
                     <Checkbox value="urinary_incontinence">Incontinencia urinaria</Checkbox>
                     <Checkbox value="kidney_failure">problemas renales</Checkbox>
                   </CheckboxGroup>
-                  <div className="hidden">
+                  <div className="">
                     <p className="text-medium text-foreground-500 mb-1">Sube una foto de perfil para la ficha</p>
                     <div className="hiddenflex w-full items-center justify-between space-x-4 p-2 border-2  hover:border-gray-400 rounded-xl transition-colors duration-300">
                       <input onChange={handleUploadImage} ref={inputFileRef} type="file" name="image" className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100" />

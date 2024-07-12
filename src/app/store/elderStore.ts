@@ -102,11 +102,9 @@ export const useElderStore = create<ElderStore>((set, get) => ({
   },
   uploadImage: async (image: File) => {
     try {
-      const formData = new FormData();
-      formData.append('image', image);
       const response = await fetch(`/api/avatar?filename=${image.name}`, {
         method: 'POST',
-        body: formData,
+        body: image,
       });
       if (!response.ok) {
         throw new Error('Network response was not ok');
