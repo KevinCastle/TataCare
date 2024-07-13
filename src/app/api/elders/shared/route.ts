@@ -1,4 +1,4 @@
-import { Contact } from '@/app/api/contacts/types';
+import { Shared } from '@/app/api/elders/types';
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
 import { NextRequest } from 'next/server';
@@ -7,36 +7,36 @@ export async function GET(request: NextRequest) {
   noStore();
   try {
     const { searchParams } = request.nextUrl;
-    const elderId = searchParams.get('elderId');
-    const data = await sql` SELECT * FROM contact WHERE elder_id=${elderId}`;
-    const contacts = data.rows;
-    return Response.json(contacts);
+    const sharedId = searchParams.get('sharedId');
+    const data = await sql`SELECT * FROM shared WHERE id=${sharedId}`;
+    const shared = data.rows[0] as Shared;
+    return Response.json(shared);
   } catch (err) {
-    throw new Error('Failed to fetch contacts.');
+    throw new Error('Failed to fetch shared link.');
   }
 }
 
 export async function PUT(request: Request) {
   noStore();
   try {
-    const contact = await request.json();
+    const shared = await request.json();
 
-    const keys = (Object.keys(contact)).join(', ');
-    const placeholders = Object.keys(contact).map((_, index) => `$${index + 1}`).join(', ');
-    const values = Object.values(contact);
+    const keys = (Object.keys(shared)).join(', ');
+    const placeholders = Object.keys(shared).map((_, index) => `$${index + 1}`).join(', ');
+    const values = Object.values(shared);
 
     const query = `
-      INSERT INTO contact (${keys})
+      INSERT INTO shared (${keys})
       VALUES (${placeholders})
       RETURNING *;
     `;
-    const data = await sql.query<Contact>(query, values);
+    const data = await sql.query<Shared>(query, values);
 
     return new Response(JSON.stringify(data.rows), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error('Failed to create contact.');
+    throw new Error('Failed to create shared link.');
   }
 }
 
@@ -46,14 +46,14 @@ export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
 
-    const { id, ...contactData } = requestBody;
-    const updates = Object.keys(contactData).map((key, index) => `${key} = $${index + 2}`).join(', ');
+    const { id, ...sharedData } = requestBody;
+    const updates = Object.keys(sharedData).map((key, index) => `${key} = $${index + 2}`).join(', ');
 
-    const values = Object.values(contactData);
+    const values = Object.values(sharedData);
     values.unshift(id);
 
     const query = `
-      UPDATE contact
+      UPDATE shared
       SET ${updates}
       WHERE id = $1
       RETURNING *;
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    throw new Error(`Failed to edit contact. ${err}`);
+    throw new Error(`Failed to edit shared link. ${err}`);
   }
 }
 
@@ -75,11 +75,11 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const id = searchParams.get('id');
     await sql`
-    DELETE FROM contacts 
+    DELETE FROM shared 
     WHERE id=${id}
     `;
-    return Response.json({ message: `Contact ${id} deleted successfully` });
+    return Response.json({ message: `shared link ${id} deleted successfully` });
   } catch (err) {
-    throw new Error('Failed to delete contact.');
+    throw new Error('Failed to delete shared link.');
   }
 }

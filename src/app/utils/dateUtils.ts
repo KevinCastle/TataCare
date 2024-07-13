@@ -19,21 +19,13 @@ export const shortDate = (dateString: string): string => {
 export const formatDateTime = (dateString: string): string => {
   const date = new Date(dateString);
 
-  date.setHours(18, 17);
-
   const formattedDate = date.toLocaleDateString('es-CL', {
     month: 'short',
     day: '2-digit',
-    year: '2-digit',
+    year: 'numeric',
   });
 
-  const formattedTime = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  }).toLowerCase();
-
-  return `${formattedTime} ${formattedDate}`;
+  return `${formattedDate}`;
 };
 
 export const calculateRemainingTime = (start: string, end: string) => {

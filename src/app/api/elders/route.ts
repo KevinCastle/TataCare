@@ -1,16 +1,29 @@
 import { Elder } from '@/app/api/elders/types';
+import { auth } from '@/auth';
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
+import { User } from '../user/types';
 
 export async function GET() {
-//   const elders = await fetchElders();
-//   return Response.json(elders);
   noStore();
   try {
+    const session = await auth();
+
+    if (!session?.user) {
+      return new Response('User not found', { status: 404 });
+    }
+
+    const userData = await sql`SELECT * FROM users WHERE email=${session.user.email}`;
+    if (userData.rowCount === 0) {
+      return new Response('User not found', { status: 404 });
+    }
+    const user = userData.rows[0] as User;
+
     const data = await sql<Elder>`
-      SELECT
-        *
+      SELECT *
       FROM elders
+      JOIN elder_user ON elders.id = elder_user.elder_id
+      WHERE elder_user.user_id = ${user.id}
       ORDER BY name ASC
     `;
 
@@ -24,21 +37,41 @@ export async function GET() {
 export async function PUT(request: Request) {
   noStore();
   try {
-    const elder = await request.json();
+    const requestBody = await request.json();
+    const { elder, userId } = requestBody;
 
-    const keys = (Object.keys(elder)).join(', ');
-    const placeholders = Object.keys(elder).map((_, index) => `$${index + 1}`).join(', ');
-    const values = Object.values(elder);
+    if (!userId) {
+      throw new Error('Missing user ID.');
+    }
 
-    const query = `
-      INSERT INTO elders (${keys})
-      VALUES (${placeholders})
+    const checkElderExistsQuery = `
+      SELECT id FROM elders WHERE id = $1;
+    `;
+    const existingElderData = await sql.query<{ id: string }>(checkElderExistsQuery, [elder.id]);
+
+    if (existingElderData.rowCount === 0) {
+      const elderKeys = Object.keys(elder).join(', ');
+      const elderPlaceholders = Object.keys(elder).map((_, index) => `$${index + 1}`).join(', ');
+      const elderValues = Object.values(elder);
+
+      const elderQuery = `
+      INSERT INTO elders (${elderKeys})
+      VALUES (${elderPlaceholders})
+      RETURNING id;
+    `;
+
+      await sql.query<{ id: string }>(elderQuery, elderValues);
+    }
+
+    const elderUserQuery = `
+      INSERT INTO elder_user (elder_id, user_id)
+      VALUES ($1, $2)
       RETURNING *;
     `;
 
-    const data = await sql.query<Elder>(query, values);
+    await sql.query(elderUserQuery, [elder.id, userId]);
 
-    return new Response(JSON.stringify(data.rows), {
+    return new Response(JSON.stringify(existingElderData.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {
