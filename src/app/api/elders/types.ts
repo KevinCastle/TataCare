@@ -17,7 +17,6 @@ export type Elder = {
 };
 
 export type ElderUser = {
-    id: string;
     elder_id: string;
     user_id: string;
 };
