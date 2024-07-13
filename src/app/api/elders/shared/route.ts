@@ -43,7 +43,7 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   noStore();
 
   try {
