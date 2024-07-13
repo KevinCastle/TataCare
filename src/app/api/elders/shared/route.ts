@@ -8,12 +8,9 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
     const sharedId = searchParams.get('sharedId');
-    if (sharedId) {
-      const data = await sql`SELECT * FROM shared WHERE id=${sharedId}`;
-      const shared = data.rows[0] as Shared;
-      return Response.json(shared);
-    }
-    return new Error('Failed to fetch shared link.');
+    const data = await sql`SELECT * FROM shared WHERE id=${sharedId}`;
+    const shared = data.rows[0] as Shared;
+    return Response.json(shared);
   } catch (err) {
     throw new Error('Failed to fetch shared link.');
   }
@@ -43,7 +40,7 @@ export async function PUT(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   noStore();
 
   try {
