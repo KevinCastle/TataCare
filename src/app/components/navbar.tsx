@@ -23,7 +23,7 @@ export default function Navbar() {
       <div className="flex justify-between items-center lg:justify-start order-1">
         <Link
           className="mb-2 flex border-b border-solid border-zinc-100 py-4 px-3"
-          href="/"
+          href="/app"
         >
           <Logo />
         </Link>
@@ -35,7 +35,7 @@ export default function Navbar() {
         <NavLinks />
       </div>
       <div className="mt-auto border-b border-solid border-zinc-200 mb-2 lg:pb-2 order-2 lg:order-3">
-        <Link isBlock href="/" color="foreground" className="font-medium flex h-[48px] grow items-center justify-center lg:flex-none lg:justify-start p-3 lg:p-2">
+        <Link isBlock href="/app" color="foreground" className="font-medium flex h-[48px] grow items-center justify-center lg:flex-none lg:justify-start p-3 lg:p-2">
           <ArrowUUpLeft color="#71717A" size={24} className="mr-2" />
           Elegir otro abuelito
         </Link>

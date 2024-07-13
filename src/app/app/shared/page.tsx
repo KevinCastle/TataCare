@@ -34,7 +34,7 @@ function Page() {
       {!loading && !isSharedLinkAvailable && (
         <>
           <p className="text-xl">Este link está vencido, por favor solicite uno nuevo.</p>
-          <Link className="mt-4" href="/">
+          <Link className="mt-4" href="/app">
             <Button type="button" color="primary">Ir al listado de abuelitos</Button>
           </Link>
         </>
@@ -43,7 +43,7 @@ function Page() {
         <div className="flex flex-col items-center">
           <Avatar src={elder.avatar} className="w-48 h-48 text-large" />
           <p className="text-xl mt-4">{`¡Se ha agregado a ${elder.name} a tu lista con éxito!`}</p>
-          <Link className="mt-4" href="/">
+          <Link className="mt-4" href="/app">
             <Button type="button" color="primary">Ir al listado de abuelitos</Button>
           </Link>
         </div>
