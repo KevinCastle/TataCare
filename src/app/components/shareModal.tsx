@@ -11,8 +11,12 @@ import {
   PopoverContent,
 } from '@nextui-org/react';
 import { ShareFat } from '@phosphor-icons/react/dist/ssr';
-import { MutableRefObject, useRef, useState } from 'react';
+import {
+  MutableRefObject, useEffect, useRef, useState,
+} from 'react';
+import { v4 } from 'uuid';
 import { Elder } from '../api/elders/types';
+import { useElderStore } from '../store';
 
 type ShareModalProps = {
     elder: Elder,
@@ -21,13 +25,39 @@ type ShareModalProps = {
 export default function ShareModal({ elder }: ShareModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isCopied, setIsCopied] = useState(false);
+  const [url, setUrl] = useState('');
   const onCloseRef: MutableRefObject<(() => void) | null> = useRef<(() => void) | null>(null);
 
-  const url = window.location.href; // TODO: Armar URL
+  const { addSharedLink } = useElderStore((state) => ({
+    addSharedLink: state.addSharedLink,
+  }));
 
   function handleCopyText() {
     navigator.clipboard.writeText(url);
   }
+
+  useEffect(
+    () => {
+      if (isOpen) {
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7);
+        const formattedExpirationDate = expirationDate.toISOString().split('T')[0];
+
+        const sharedId = v4();
+
+        const sharedLink = {
+          id: sharedId,
+          elder_id: elder.id,
+          date: formattedExpirationDate,
+          used: false,
+        };
+        addSharedLink(sharedLink);
+        const baseUrl = `${window.location.protocol}//${window.location.host}`;
+        setUrl(`${baseUrl}/app/shared?sharedId=${sharedId}`);
+      }
+    },
+    [isOpen],
+  );
 
   return (
     <div>

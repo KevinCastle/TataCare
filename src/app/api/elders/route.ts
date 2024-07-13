@@ -44,18 +44,24 @@ export async function PUT(request: Request) {
       throw new Error('Missing user ID.');
     }
 
-    const elderKeys = Object.keys(elder).join(', ');
-    const elderPlaceholders = Object.keys(elder).map((_, index) => `$${index + 1}`).join(', ');
-    const elderValues = Object.values(elder);
+    const checkElderExistsQuery = `
+      SELECT id FROM elders WHERE id = $1;
+    `;
+    const existingElderData = await sql.query<{ id: string }>(checkElderExistsQuery, [elder.id]);
 
-    const elderQuery = `
+    if (existingElderData.rowCount === 0) {
+      const elderKeys = Object.keys(elder).join(', ');
+      const elderPlaceholders = Object.keys(elder).map((_, index) => `$${index + 1}`).join(', ');
+      const elderValues = Object.values(elder);
+
+      const elderQuery = `
       INSERT INTO elders (${elderKeys})
       VALUES (${elderPlaceholders})
       RETURNING id;
     `;
 
-    const elderData = await sql.query<{ id: string }>(elderQuery, elderValues);
-    const { id: ElderId } = elderData.rows[0];
+      await sql.query<{ id: string }>(elderQuery, elderValues);
+    }
 
     const elderUserQuery = `
       INSERT INTO elder_user (elder_id, user_id)
@@ -63,12 +69,9 @@ export async function PUT(request: Request) {
       RETURNING *;
     `;
 
-    const elderUserData = await sql.query(elderUserQuery, [ElderId, userId]);
+    await sql.query(elderUserQuery, [elder.id, userId]);
 
-    return new Response(JSON.stringify({
-      elder: elderData.rows[0],
-      elderUser: elderUserData.rows[0],
-    }), {
+    return new Response(JSON.stringify(existingElderData.rows[0]), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err) {

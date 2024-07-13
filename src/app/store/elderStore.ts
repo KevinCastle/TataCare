@@ -1,18 +1,24 @@
 import { create } from 'zustand';
 import { PutBlobResult } from '@vercel/blob';
-import { Elder } from '../api/elders/types';
+import { Elder, Shared } from '../api/elders/types';
 import { useUserStore } from './userStore';
 
 type ElderState = {
   elders: Elder[],
-  selectedElder: Elder | null
+  selectedElder: Elder | null,
+  isSharedLinkAvailable: boolean,
+  sharedElder: Elder | null,
+  loading: boolean,
 }
 
 type ElderActions = {
   getAll: () => void,
-  getElder: (id: string) => void,
-  add: (elder: Elder) => void,
+  getElder: (id: string) => Promise<Elder>,
+  add: (elder: Elder) => Promise<Elder>,
+  addSharedLink: (shared: Shared) => void,
+  addElderShared: (id: string) => Promise<Elder | null>,
   edit: (id: string, elder: Elder) => void,
+  editSharedLink: (sharedLink: Shared) => void,
   remove: (id: string) => void,
   uploadImage: (image: File) => Promise<PutBlobResult>
 }
@@ -22,12 +28,16 @@ type ElderStore = ElderState & ElderActions
 const defaultInitState: ElderState = {
   elders: [],
   selectedElder: null,
+  isSharedLinkAvailable: true,
+  loading: false,
+  sharedElder: null,
 };
 
 export const useElderStore = create<ElderStore>((set, get) => ({
   ...defaultInitState,
   getAll: async () => {
     try {
+      set({ loading: true });
       const response = await fetch('api/elders');
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -36,9 +46,11 @@ export const useElderStore = create<ElderStore>((set, get) => ({
       set({ elders });
     } catch (error) {
       throw new Error('Failed to fetch elders:');
+    } finally {
+      set({ loading: false });
     }
   },
-  getElder: async (id: string) => {
+  getElder: async (id: string): Promise<Elder> => {
     try {
       const response = await fetch(`/api/elders/${id}`);
       if (!response.ok) {
@@ -46,11 +58,12 @@ export const useElderStore = create<ElderStore>((set, get) => ({
       }
       const elder = await response.json();
       set({ selectedElder: elder });
+      return elder;
     } catch (error) {
       throw new Error('Failed to update elder:');
     }
   },
-  add: async (elder: Elder) => {
+  add: async (elder: Elder): Promise<Elder> => {
     try {
       await useUserStore.getState().get();
       const userId = useUserStore.getState().user?.id;
@@ -66,8 +79,55 @@ export const useElderStore = create<ElderStore>((set, get) => ({
         throw new Error('Network response was not ok');
       }
       get().getAll();
+      const elderData = await response.json();
+      return elderData;
     } catch (error) {
       throw new Error('Failed to update elder:');
+    }
+  },
+  addSharedLink: async (shared: Shared) => {
+    try {
+      const response = await fetch('/api/elders/shared', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(shared),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      throw new Error('Failed to update elder:');
+    }
+  },
+  addElderShared: async (id: string): Promise<Elder | null> => {
+    try {
+      set({ loading: true });
+      const response = await fetch(`/api/elders/shared?sharedId=${id}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const sharedLink = await response.json();
+
+      const sharedLinkDate = new Date(sharedLink.date);
+      const today = new Date();
+      sharedLinkDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      if (sharedLink.used || sharedLinkDate < today) {
+        set({ isSharedLinkAvailable: false });
+        return null;
+      }
+      sharedLink.used = true;
+      get().editSharedLink(sharedLink);
+      const elder = await get().getElder(sharedLink.elder_id);
+      get().add(elder);
+      return elder;
+    } catch (error) {
+      throw new Error('Failed to update elder:');
+    } finally {
+      set({ loading: false });
     }
   },
   edit: async (id: string, elder: Elder) => {
@@ -85,6 +145,22 @@ export const useElderStore = create<ElderStore>((set, get) => ({
       get().getElder(id);
     } catch (error) {
       throw new Error('Failed to update elder:');
+    }
+  },
+  editSharedLink: async (sharedLink: Shared) => {
+    try {
+      const response = await fetch('/api/elders/shared', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sharedLink),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+    } catch (error) {
+      throw new Error('Failed to update sharedLink:');
     }
   },
   remove: async (id: string) => {

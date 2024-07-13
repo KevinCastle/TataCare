@@ -21,3 +21,10 @@ export type ElderUser = {
     elder_id: string;
     user_id: string;
 };
+
+export type Shared = {
+    id: string;
+    date: string;
+    elder_id: string;
+    used: boolean;
+};
