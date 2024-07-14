@@ -143,7 +143,7 @@ export default function Home() {
         </Navbar>
         <article className="lg:h-[547px] bg-zinc-50">
           <section className="grid grid-cols-12 h-full">
-            <div className="col-span-7 container flex flex-col justify-center">
+            <div className="hidden lg:flex col-span-7 container flex-col justify-center">
               <h1 className="text-5xl text-pretty text-zinc-900">Cuidar a tus seres queridos nunca fue tan fácil.</h1>
               <h2 className="text-lg font-medium my-4 text-pretty">
                 Lleva un registro detallado y personalizado en un sólo lugar donde la información nunca falte.
@@ -152,9 +152,18 @@ export default function Home() {
                 Empieza ahora
               </Button>
             </div>
-            <div className="hero-background col-end-13 col-span-4 flex items-end h-full">
-              <div className="relative -left-32">
+            <div className="hero-background col-span-12 lg:col-end-13 lg:col-span-4 lg:flex lg:items-end h-full">
+              <div className="hidden lg:block relative -left-32">
                 <Image src="https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/landing/hero-grandpa-rKkmgjxxzqqBIX5hDZdA3BDhM6IZry.png" alt="Abuelo con su nieto" width={519} height={513} />
+              </div>
+              <div className="block lg:hidden container py-6">
+                <h1 className="text-5xl text-pretty text-zinc-900">Cuidar a tus seres queridos nunca fue tan fácil.</h1>
+                <h2 className="text-lg font-medium my-4 text-pretty text-zinc-900">
+                  Lleva un registro detallado y personalizado en un sólo lugar donde la información nunca falte.
+                </h2>
+                <Button type="button" color="primary" size="lg" className="w-fit" onPress={() => router.push('/app')}>
+                  Empieza ahora
+                </Button>
               </div>
             </div>
           </section>
@@ -164,10 +173,14 @@ export default function Home() {
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
-                <div className="col-span-1" key={feature.title.replaceAll(' ', ',')}>
-                  <Icon size={48} color={feature.color} />
-                  <h2 className="text-lg font-semibold my-2">{feature.title}</h2>
-                  <p className=" text-zinc-800 text-pretty">{feature.description}</p>
+                <div className="col-span-1 flex lg:flex-col" key={feature.title.replaceAll(' ', ',')}>
+                  <div className="mr-3">
+                    <Icon size={48} color={feature.color} />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold my-2">{feature.title}</h2>
+                    <p className=" text-zinc-800 text-pretty">{feature.description}</p>
+                  </div>
                 </div>
               );
             })}
@@ -188,14 +201,14 @@ export default function Home() {
               >
                 <CardBody>
                   <div className="grid grid-cols-5 gap-6">
-                    <div className={`col-span-2 text-white ${index % 2 === 0 ? 'order-2' : 'order-1'}`}>
+                    <div className={`col-span-5 lg:col-span-3 mx-auto lg:mx-0 ${index % 2 === 0 ? 'lg:order-1' : 'lg:order-2 lg:ml-auto'}`}>
+                      <Image src={functionality.image} alt={functionality.title} />
+                    </div>
+                    <div className={`col-span-5 lg:col-span-2 text-white ${index % 2 === 0 ? 'lg:order-2' : 'lg:order-1'}`}>
                       <p className="text-2xl font-semibold pb-4">{functionality.title}</p>
                       <p className="text-lg">
                         {functionality.description}
                       </p>
-                    </div>
-                    <div className={`col-span-3 ${index % 2 === 0 ? 'order-1' : 'order-2 ml-auto'}`}>
-                      <Image src={functionality.image} alt={functionality.title} />
                     </div>
                   </div>
                 </CardBody>
@@ -204,8 +217,8 @@ export default function Home() {
           </section>
         </article>
         <article id="frecuently-asked-questions" className="bg-blue-200">
-          <section className="container grid grid-cols-12 py-14">
-            <div className="col-start-2 col-end-12 rounded-xl bg-zinc-50 px-8 py-10">
+          <section className="container lg:grid lg:grid-cols-12 py-14">
+            <div className="lg:col-start-2 lg:col-end-12 rounded-xl bg-zinc-50 px-8 py-10">
               <p className="text-3xl text-zinc-900 font-semibold text-center">Preguntas frecuentes</p>
               <Accordion>
                 {frecuentlyAskedQuestions.map((faq) => (
