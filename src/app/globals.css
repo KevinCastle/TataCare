@@ -2,10 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-body {}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-background {
+  background-color: #99C7FB;
+  background-image: url('https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/landing/Vector-logo-gwTkgsbtdCnM6zCBSe8sYBwdk5ftDl.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: repeat;
+}
+
+.logo-background {
+  position: relative;
+  background-image: linear-gradient(to bottom, #002e62, #99c7fb);
+}
+
+.logo-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/landing/Vector-logo-gwTkgsbtdCnM6zCBSe8sYBwdk5ftDl.png'); /* Your image here */
+  opacity: 0.3;
+  background-position: center;
+  background-size: contain;
+  background-repeat: repeat;
+}
+
+.logo-background {
+  position: relative;
+}
+
+/* Ensure the content on top of the background is visible */
+.logo-background > * {
+  position: relative;
+  z-index: 1;
 }
