@@ -13,11 +13,8 @@ html {
 }
 
 .hero-background {
+  position: relative;
   background-color: #99C7FB;
-  background-image: url('https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/landing/Vector-logo-gwTkgsbtdCnM6zCBSe8sYBwdk5ftDl.png');
-  background-position: center;
-  background-size: cover;
-  background-repeat: repeat;
 }
 
 .logo-background {
@@ -25,6 +22,7 @@ html {
   background-image: linear-gradient(to bottom, #002e62, #99c7fb);
 }
 
+.hero-background::before,
 .logo-background::before {
   content: '';
   position: absolute;
@@ -35,16 +33,31 @@ html {
   background-image: url('https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/landing/Vector-logo-gwTkgsbtdCnM6zCBSe8sYBwdk5ftDl.png'); /* Your image here */
   opacity: 0.3;
   background-position: center;
-  background-size: contain;
   background-repeat: repeat;
 }
 
-.logo-background {
-  position: relative;
+.hero-background::before{
+  background-size: cover;
 }
 
-/* Ensure the content on top of the background is visible */
+.logo-background::before{
+  background-size: auto;
+}
+
+.hero-background > *,
 .logo-background > * {
   position: relative;
   z-index: 1;
 }
+
+@media screen and (min-width: 1024px) {
+  .hero-background::before {
+   opacity: 1;
+  }
+
+  .logo-background::before {
+    background-size: contain;
+  }
+  
+}
+
