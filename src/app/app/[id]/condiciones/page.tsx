@@ -4,7 +4,8 @@ import {
   useAllergyStore, useDiseaseStore, useElderStore, useMedicationStore,
 } from '@/app/store';
 import {
-  FirstAid, Heartbeat, Prescription, Virus,
+  // FirstAid,
+  Heartbeat, Prescription, Virus,
 } from '@phosphor-icons/react/dist/ssr';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -97,13 +98,13 @@ function Page() {
                     <p className="font-medium text-zinc-600">Detalle</p>
                     <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{condition.detail}</p>
                   </div>
-                  <div className="col-span-1">
+                  {/* <div className="col-span-1">
                     <p className="font-medium text-zinc-600">Medicamentos asociados</p>
                     <div className="flex gap-1">
                       <FirstAid size={20} color="#C20E4D" className="mt-1" weight="bold" />
-                      <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">medicina</p>
+                      <p className="text-lg font-medium text-zinc-900 text-pretty ms-1">{condition.}</p>
                     </div>
-                  </div>
+                  </div> */}
                 </Card>
               </section>
             ))}
