@@ -9,6 +9,15 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
+  options: {
+    safelist: ['text-green-400',
+      'text-green-100',
+      'text-yellow-300',
+      'text-yellow-200',
+      'text-red-100',
+      'text-red-200',
+      'text-red-400'],
+  },
   theme: {
     extend: {
       screens: {
