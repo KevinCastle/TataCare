@@ -159,7 +159,7 @@ export default function DeleteModal({ id, type }: DeleteModalProps) {
     <div>
       {elderId && (
       <>
-        <Button type="button" onPress={onOpen} className="h-8 w-8 min-w-0 flex justify-center items-center bg-transparent hover:bg-zinc-300/80 transition-colors duration-150 rounded-full px-1">
+        <Button type="button" aria-label="Eliminar" onPress={onOpen} className="h-8 w-8 min-w-0 flex justify-center items-center bg-transparent hover:bg-zinc-300/80 transition-colors duration-150 rounded-full px-1">
           <Trash size={24} weight="bold" color="#F31260" />
         </Button>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
