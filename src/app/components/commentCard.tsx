@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import {
   Smiley, SmileyMeh, SmileyNervous, SmileySad, SmileyWink, Star, ThumbsDown, ThumbsUp,
 } from '@phosphor-icons/react/dist/ssr';
+import clsx from 'clsx';
 import { Comment } from '../api/comments/types';
 import { formatDateTime } from '../utils';
 import { useUserStore } from '../store/userStore';
@@ -78,11 +79,11 @@ export default function CommentCard({ comment }: CommentProps) {
           <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
             <p>Emoción</p>
             <div className="flex flex-row-reverse justify-center my-2">
-              <SmileyWink size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 5 && 'text-green-400'} mx-2 lg:mx-0`} />
-              <Smiley size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 4 && 'text-yellow-300'} mx-2 lg:mx-0`} />
-              <SmileyMeh size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 3 && 'text-yellow-200'} mx-2 lg:mx-0`} />
-              <SmileyNervous size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 2 && 'text-red-200'} mx-2 lg:mx-0`} />
-              <SmileySad size={24} weight="fill" className={`text-zinc-200 ${comment.emotion_rating === 1 && 'text-red-400'} mx-2 lg:mx-0`} />
+              <SmileyWink size={24} weight="fill" className={clsx('text-green-400 mx-2 lg:mx-0', { 'text-zinc-200': comment.emotion_rating !== 5 })} />
+              <Smiley size={24} weight="fill" className={clsx('text-yellow-300 mx-2 lg:mx-0', { 'text-zinc-200': comment.emotion_rating !== 4 })} />
+              <SmileyMeh size={24} weight="fill" className={clsx('text-yellow-200 mx-2 lg:mx-0', { 'text-zinc-200': comment.emotion_rating !== 3 })} />
+              <SmileyNervous size={24} weight="fill" className={clsx('text-red-200 mx-2 lg:mx-0', { 'text-zinc-200': comment.emotion_rating !== 2 })} />
+              <SmileySad size={24} weight="fill" className={clsx('text-red-400 mx-2 lg:mx-0', { 'text-zinc-200': comment.emotion_rating !== 1 })} />
             </div>
           </div>
           <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
@@ -94,8 +95,8 @@ export default function CommentCard({ comment }: CommentProps) {
           <div className="col-span-4 sm:col-span-1 flex items-center justify-between sm:block mb-3 sm:mb-0 sm:text-center">
             <p>Actividad física</p>
             <div className="flex justify-center my-2">
-              <ThumbsDown size={24} weight="fill" className={`text-red-500 ${comment.physical_activity && 'text-red-100'} mx-4`} />
-              <ThumbsUp size={24} weight="fill" className={`text-green-500 ${!comment.physical_activity && 'text-green-100'} mx-4`} />
+              <ThumbsDown size={24} weight="fill" className={clsx('text-red-100 mx-4', { 'text-red-500': !comment.physical_activity })} />
+              <ThumbsUp size={24} weight="fill" className={clsx('text-green-100 mx-4', { 'text-green-500': comment.physical_activity })} />
             </div>
           </div>
         </CardFooter>

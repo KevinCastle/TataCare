@@ -60,7 +60,7 @@ function LikeButton({ id, type }: LikeButtonProps) {
   }, [id, type, medications, contacts]);
 
   return (
-    <Button onPress={handleLike} type="button" className="h-8 w-8 min-w-0 flex justify-center items-center bg-transparent hover:bg-zinc-300/80 transition-colors duration-150 rounded-full px-1">
+    <Button onPress={handleLike} aria-label="Marcar como favorito y mostrar en la ficha" type="button" className="h-8 w-8 min-w-0 flex justify-center items-center bg-transparent hover:bg-zinc-300/80 transition-colors duration-150 rounded-full px-1">
       {medication && medication.favorite && <Star size={24} weight="fill" color="#F5A524" />}
       {medication && !medication.favorite && <Star size={24} weight="bold" color="#F5A524" />}
       {contact && elder && contact.id === elder.favorite_contact && <Star size={24} weight="fill" color="#F5A524" />}
