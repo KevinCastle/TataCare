@@ -3,7 +3,7 @@ import {
   CardFooter,
   Avatar,
 } from '@nextui-org/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Smiley, SmileyMeh, SmileyNervous, SmileySad, SmileyWink, Star, ThumbsDown, ThumbsUp,
 } from '@phosphor-icons/react/dist/ssr';
@@ -12,15 +12,16 @@ import { Comment } from '../api/comments/types';
 import { formatDateTime } from '../utils';
 import { useUserStore } from '../store/userStore';
 import DeleteModal from './deleteModal';
+import { User } from '../api/user/types';
 
 interface CommentProps {
   comment: Comment;
 }
 
 export default function CommentCard({ comment }: CommentProps) {
-  const { getUser, user } = useUserStore((state) => ({
-    getUser: state.get,
-    user: state.user,
+  const [caregiver, setCaregiver] = useState<User | null>(null);
+  const { getUser } = useUserStore((state) => ({
+    getUser: state.getById,
   }));
 
   const dailyStars = Array.from({ length: 5 }, (_, i) => 5 - i).map((number) => (
@@ -43,18 +44,22 @@ export default function CommentCard({ comment }: CommentProps) {
   ));
 
   useEffect(() => {
-    if (!user) getUser(comment.caregiver_id);
-  }, [getUser, user, comment.caregiver_id]);
+    if (!caregiver) {
+      getUser(comment.caregiver_id).then((user) => {
+        setCaregiver(user);
+      });
+    }
+  }, [getUser, comment, caregiver]);
 
   return (
     (
       <Card className="w-full h-fit">
         <CardHeader className=" p-3">
           <div className="flex items-center">
-            <Avatar showFallback src={user?.avatar} />
+            <Avatar showFallback src={caregiver?.avatar} />
             <div className="ml-2">
               <p className="text-xl font-semibold text-zinc-700">
-                {`${user?.name} ${user?.surname}`}
+                {`${caregiver?.name} ${caregiver?.surname}`}
               </p>
               <p className="text-zinc-700">{formatDateTime(comment.date)}</p>
             </div>

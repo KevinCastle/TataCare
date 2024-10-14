@@ -2,17 +2,18 @@ import { create } from 'zustand';
 import { User } from '../api/user/types';
 
 type responseType = {
-    success: boolean,
-    errorMessage: string,
+  success: boolean,
+  errorMessage: string,
 }
 
 type UserState = {
-    user: User | null,
+  user: User | null,
 }
 
 type UserActions = {
-    get: (userId?: string) => void,
+  get: () => void,
   add: (user: User) => Promise<responseType>,
+  getById: (userId: string) => Promise<User | null>,
 }
 
 type UserStore = UserState & UserActions
@@ -23,8 +24,8 @@ const defaultInitState: UserState = {
 
 export const useUserStore = create<UserStore>((set) => ({
   ...defaultInitState,
-  get: async (userId) => {
-    const endpoint = userId ? `/api/user?userId=${userId}` : '/api/user';
+  get: async () => {
+    const endpoint = '/api/user';
     try {
       const response = await fetch(endpoint);
       if (!response.ok) {
@@ -56,6 +57,19 @@ export const useUserStore = create<UserStore>((set) => ({
       return { success: true, errorMessage: '' };
     } catch (error) {
       return { success: false, errorMessage: 'Error al registrar. Intente más tarde.' };
+    }
+  },
+  getById: async (userId: string) => {
+    const endpoint = `/api/user?userId=${userId}`;
+    try {
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const user = await response.json();
+      return user;
+    } catch (error) {
+      throw new Error('Failed to fetch user:');
     }
   },
 }));
