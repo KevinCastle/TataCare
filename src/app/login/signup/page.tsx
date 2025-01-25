@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const showForm = false;
 
   const { addUser } = useUserStore((state) => ({
     addUser: state.add,
@@ -77,95 +78,111 @@ export default function LoginPage() {
 
   return (
     <main className="flex items-center justify-center md:h-screen overflow-hidden">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="flex h-20 w-full items-end rounded-lg bg-blue-700 text-white p-3 md:h-36">
-          <div className="flex items-center">
-            <div>
-              <UsersThree size={40} className="h-auto w-8 sm:w-10 mr-2" />
+
+      {showForm ? (
+        <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
+          <div className="flex h-20 w-full items-end rounded-lg bg-blue-700 text-white p-3 md:h-36">
+            <div className="flex items-center">
+              <div>
+                <UsersThree size={40} className="h-auto w-8 sm:w-10 mr-2" />
+              </div>
+              <p className="text-2xl sm:text-3xl font-medium">Tatacare</p>
             </div>
-            <p className="text-2xl sm:text-3xl font-medium">Tatacare</p>
           </div>
-        </div>
-        <form action={submitForm} className="space-y-3">
-          <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-            <h1 className="mb-6 text-2xl">
-              Cree una cuenta.
-            </h1>
-            <div className="w-full flex flex-col gap-4 my-2">
-              <p className="text-sm text-gray-600">Ingresando los siguientes datos podrá tener su cuenta en segundos:</p>
-              <div className="grid grid-cols-2 gap-2">
+          <form action={submitForm} className="space-y-3">
+            <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
+              <h1 className="mb-6 text-2xl">
+                Cree una cuenta.
+              </h1>
+              <div className="w-full flex flex-col gap-4 my-2">
+                <p className="text-sm text-gray-600">Ingresando los siguientes datos podrá tener su cuenta en segundos:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    type="text"
+                    label="Nombre"
+                    color="primary"
+                    placeholder="Ingrese su nombre"
+                    className="col-span-1"
+                    value={userName}
+                    onValueChange={setUserName}
+                    isRequired
+                  />
+                  <Input
+                    type="text"
+                    label="Apellido"
+                    color="primary"
+                    placeholder="Ingrese su apellido"
+                    className="col-span-1"
+                    value={userSurname}
+                    onValueChange={setUserSurname}
+                    isRequired
+                  />
+                </div>
                 <Input
-                  type="text"
-                  label="Nombre"
+                  type="email"
+                  label="Correo electrónico"
                   color="primary"
-                  placeholder="Ingrese su nombre"
-                  className="col-span-1"
-                  value={userName}
-                  onValueChange={setUserName}
+                  placeholder="Ingrese su correo electrónico"
+                  value={email}
+                  onValueChange={setEmail}
+                  startContent={(
+                    <Envelope size={24} weight="fill" className="text-blue-400 pointer-events-none" />
+                                )}
                   isRequired
                 />
                 <Input
-                  type="text"
-                  label="Apellido"
+                  label="Contraseña"
                   color="primary"
-                  placeholder="Ingrese su apellido"
-                  className="col-span-1"
-                  value={userSurname}
-                  onValueChange={setUserSurname}
+                  placeholder="Ingrese su contraseña"
+                  value={password}
+                  onValueChange={setPassword}
+                  endContent={(
+                    <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                      {isVisible ? (
+                        <EyeSlash size={24} className="text-blue-400 pointer-events-none" />
+                      ) : (
+                        <Eye size={24} className=" text-blue-400 pointer-events-none" />
+                      )}
+                    </button>
+                                )}
+                  type={isVisible ? 'text' : 'password'}
                   isRequired
                 />
               </div>
-              <Input
-                type="email"
-                label="Correo electrónico"
-                color="primary"
-                placeholder="Ingrese su correo electrónico"
-                value={email}
-                onValueChange={setEmail}
-                startContent={(
-                  <Envelope size={24} weight="fill" className="text-blue-400 pointer-events-none" />
-                                )}
-                isRequired
-              />
-              <Input
-                label="Contraseña"
-                color="primary"
-                placeholder="Ingrese su contraseña"
-                value={password}
-                onValueChange={setPassword}
-                endContent={(
-                  <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                    {isVisible ? (
-                      <EyeSlash size={24} className="text-blue-400 pointer-events-none" />
-                    ) : (
-                      <Eye size={24} className=" text-blue-400 pointer-events-none" />
-                    )}
-                  </button>
-                                )}
-                type={isVisible ? 'text' : 'password'}
-                isRequired
-              />
-            </div>
-            {errorMessage && (
+              {errorMessage && (
               <div className="flex items-center">
                 <WarningCircle size={20} className="text-red-500" />
                 <p className="text-sm text-red-500 ml-2">{errorMessage}</p>
               </div>
-            )}
-            <Button color="primary" type="submit" className="mt-4 w-full">
-              Registrarse
-              {' '}
-              <ArrowRight size={20} className="ml-auto text-gray-50" />
-            </Button>
-            <div className="flex justify-center items-center mt-4">
-              <span className="text-xs text-gray-600 mr-2">¿Ya tiene una cuenta?</span>
-              <Button color="primary" variant="light" className="text-xs font-semibold" onPress={() => router.push('/login')}>
-                Iniciar sesión
+              )}
+              <Button color="primary" type="submit" className="mt-4 w-full">
+                Registrarse
+                {' '}
+                <ArrowRight size={20} className="ml-auto text-gray-50" />
               </Button>
+              <div className="flex justify-center items-center mt-4">
+                <span className="text-xs text-gray-600 mr-2">¿Ya tiene una cuenta?</span>
+                <Button color="primary" variant="light" className="text-xs font-semibold" onPress={() => router.push('/login')}>
+                  Iniciar sesión
+                </Button>
+              </div>
             </div>
+          </form>
+        </div>
+      ) : (
+        <article className="flex flex-col justify-center items-center max-w-[800px] px-4 md:px-8">
+          <div className="flex flex-col justify-between text-white">
+            <h1 className="text-6xl mb-16">Tatacare está en desarrollo</h1>
+            <p className="text-xl mb-4">Actualmente no está disponible la app para todos puesto que quiero centrarme en su desarrollo</p>
+            <p>
+              Próximamente comentaré avances en un blog que dejaré publicado acá.
+              Cualquier duda o acceso anticipado puedes encontrarme en
+              <a className="underline font-bold ml-1" href="https://www.linkedin.com/in/kevin-castillo11/" target="_blank" rel="noreferrer">Linkedin</a>
+            </p>
+            <p />
           </div>
-        </form>
-      </div>
+        </article>
+      )}
     </main>
   );
 }
