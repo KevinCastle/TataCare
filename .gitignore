@@ -35,3 +35,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# private notes (career strategy, roadmap) — accessible to Claude, not public
+.claude/private/
