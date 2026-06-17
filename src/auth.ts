@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
-import { compare } from 'bcrypt-ts/browser';
+import { compare } from 'bcrypt';
 import { User } from '@/app/api/user/types';
 import { authConfig } from './auth.config';
 

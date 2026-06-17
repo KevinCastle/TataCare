@@ -115,6 +115,44 @@ Además, en [Vercel](vercel-url) es necesario crear una base de datos PostgreSQL
    npm run dev
    ```
 
+### Deployment en Vercel
+
+TataCare está deployado en Vercel. Para mantener o redeployar la aplicación:
+
+#### Variables de entorno necesarias
+
+Copia el archivo `.env.example` como referencia:
+```sh
+cp .env.example .env.local
+```
+
+Luego configura las siguientes variables en tu dashboard de Vercel o archivo `.env.local`:
+
+- **POSTGRES_URL**: Connection string de PostgreSQL (proporcionado por Vercel)
+- **BLOB_READ_WRITE_TOKEN**: Token de autenticación para Vercel Blob
+- **NEXTAUTH_URL**: URL canónica de la aplicación (ej: https://tata-care.vercel.app)
+- **NEXTAUTH_SECRET**: Clave secreta para sesiones JWT (generar: `openssl rand -base64 32`)
+
+#### Deployar en Vercel
+
+1. Conecta tu repositorio a [Vercel](https://vercel.com)
+2. Las variables de entorno se configuran automáticamente en el dashboard de Vercel
+3. Cada push a `main` genera un deployment automático
+4. Los PRs generan preview deployments automáticos
+
+#### Build y start local
+
+```sh
+# Build para producción
+npm run build
+
+# Ejecutar servidor de producción (después del build)
+npm start
+
+# Verificar linting
+npm run lint
+```
+
 <p align="right">(<a href="#readme-top">volver arriba</a>)</p>
 
 
