@@ -45,8 +45,8 @@ export default function Landing() {
           </span>
           Tata<span className="-ml-1 text-pino-oscuro">Care</span>
         </p>
-        <Link href="/login" className="flex min-h-12 items-center rounded-xl px-4 font-bold text-pino-oscuro hover:bg-pino/10">
-          Iniciar sesión
+        <Link href="/cocina" className="flex min-h-12 items-center rounded-xl px-4 font-bold text-pino-oscuro hover:bg-pino/10">
+          Design system
         </Link>
       </header>
 
@@ -60,11 +60,11 @@ export default function Landing() {
             contactos de emergencia y cómo estuvo su día — en un solo lugar, para todos los que cuidan.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href="/registro" className="px-8 text-lg">
-              Crear cuenta gratis
-            </ButtonLink>
-            <ButtonLink href="/login" variant="ghost">
-              Ya tengo cuenta
+            <span className="inline-flex min-h-12 items-center rounded-xl bg-pino/10 px-6 font-bold text-pino-oscuro">
+              🌱 En construcción — llega pronto
+            </span>
+            <ButtonLink href="/cocina" variant="ghost">
+              Ver el design system
             </ButtonLink>
           </div>
         </section>
@@ -96,10 +96,10 @@ export default function Landing() {
           </p>
           <div className="mt-7">
             <Link
-              href="/registro"
+              href="/cocina"
               className="inline-flex min-h-12 items-center justify-center rounded-xl bg-papel px-8 text-lg font-bold text-pino-oscuro hover:bg-white"
             >
-              Empezar ahora
+              Así se va a ver
             </Link>
           </div>
         </section>

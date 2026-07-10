@@ -1,40 +1,29 @@
 {
   "name": "tatacare",
-  "version": "2.0.0",
+  "version": "2.0.0-mes1",
   "private": true,
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "postinstall": "prisma generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "tsc --noEmit",
-    "db:dev": "prisma dev",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
     "icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
-    "@prisma/client": "^6.11.0",
-    "@vercel/blob": "^1.1.0",
-    "bcryptjs": "^3.0.2",
     "next": "^15.3.5",
-    "next-auth": "^5.0.0-beta.29",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "zod": "^3.25.0"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "prisma": "^6.11.0",
     "sharp": "^0.34.2",
     "tailwindcss": "^4.1.11",
-    "tsx": "^4.20.0",
     "typescript": "^5.8.0"
   }
 }

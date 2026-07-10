@@ -1,199 +1,33 @@
-<a id="readme-top"></a>
+# TataCare v2
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+> **Cuidar bajo un mismo techo.** Todo lo que una familia necesita saber sobre la persona que
+> cuida — remedios, alergias, contactos de emergencia y cómo estuvo su día — en un solo lugar.
 
+Esta rama (`v2`) es la reconstrucción real de TataCare: mobile-first, accesible (WCAG 2.2 AA como
+piso) y con marca propia. Se construye **una feature por mes**, documentada en video.
 
+- 📐 **Propuesta de diseño:** [docs/v2-propuesta-diseno.md](docs/v2-propuesta-diseno.md)
+- 🗺️ **Implementación de referencia completa:** rama `guia/v2-referencia` (ver su `GUIA.md`)
+- 🧓 **v1 (en producción):** rama `main` · [tata-care.vercel.app](https://tata-care.vercel.app)
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="#006FEE" viewBox="0 0 256 256"><path d="M164.38,181.1a52,52,0,1,0-72.76,0,75.89,75.89,0,0,0-30,28.89,12,12,0,0,0,20.78,12,53,53,0,0,1,91.22,0,12,12,0,1,0,20.78-12A75.89,75.89,0,0,0,164.38,181.1ZM100,144a28,28,0,1,1,28,28A28,28,0,0,1,100,144Zm147.21,9.59a12,12,0,0,1-16.81-2.39c-8.33-11.09-19.85-19.59-29.33-21.64a12,12,0,0,1-1.82-22.91,20,20,0,1,0-24.78-28.3,12,12,0,1,1-21-11.6,44,44,0,1,1,73.28,48.35,92.18,92.18,0,0,1,22.85,21.69A12,12,0,0,1,247.21,153.59Zm-192.28-24c-9.48,2.05-21,10.55-29.33,21.65A12,12,0,0,1,6.41,136.79,92.37,92.37,0,0,1,29.26,115.1a44,44,0,1,1,73.28-48.35,12,12,0,1,1-21,11.6,20,20,0,1,0-24.78,28.3,12,12,0,0,1-1.82,22.91Z"></path></svg>
+## Estado actual — Mes 1: fundación
 
-<h2 align="center">Tatacare</h2>
-  <p align="center">
-    Cuidar a tus seres queridos nunca fue tan fácil.
-  </p>
-</div>
+Incluye el design system completo y la PWA base, sin features todavía:
 
+- **Tokens de marca** "papel, pino y copihue" en `src/app/globals.css` (Tailwind v4 `@theme`)
+- **Atkinson Hyperlegible** — tipografía del Braille Institute, cuerpo base 17px, escala en `rem`
+- **Primitivas UI accesibles** en `src/components/` — touch targets ≥48px, focus visible, errores anunciados
+- **PWA**: manifest + iconos (regenerables con `npm run icons`)
+- **`/cocina`** — styleguide vivo de todos los componentes
 
+## Correr
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Tabla de contenidos</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">Acerca del proyecto</a>
-      <ul>
-        <li><a href="#built-with">Stack de desarrollo</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Cómo empezar</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisitos</a></li>
-        <li><a href="#installation">Instalación</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-  </ol>
-</details>
-
-
-
-<!-- ABOUT THE PROJECT -->
-## Acerca del proyecto
-
-
-Tatacare inicia como  un proyecto de grado enfocado a ayudar a familiares y cuidadores a poder llevar un registro de sus adultos mayores, buscando facilitarles el pesado trabajo que puede ser llevar el control de todo. Con Tatacare se busca que se pueda tener un registro de todos los datos importantes que se necesitan en cualquier momento, es una plataforma para dejar todo lo que se pueda olvidar facilmente como fechas, contactos y otros. Hacer un traspaso de los cuidados que necesita un adulto mayor a un cuidador será muy fácil utilizando Tatacare puesto que cualquier duda se puede consultar la app y a la vez se pueden dejar comentarios para los otros usuarios de manera que siempre haya un registro de información.
-
-Entre las funcionalidades que tiene la app están:
-1. Registro de medicamentos con fechas, farmacias donde conseguir, dosis y la condición destinada.
-2. Registro de contactos de emergencia como doctores, clínica y familiares.
-3. Registro de qué cosas le gustan, qué cosas no le gustan y qué cosas hay que evitar porque le hace mal.
-4. Comentarios calificando el día.
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
-
-
-### Stack de desarrollo
-
-Es una aplicación web, con la finalidad de que se pueda utilizar tanto en teléfonos como en computadores, que sea accesible para todo tipo de usuario. Teniendo eso en cuenta para su creación se utilizaron las siguientes herramientas:
-
-* ![Vercel][vercel]
-* ![Next][Next.js]
-* ![React][React.js]
-* ![TypeScript][typescript]
-* ![Tailwind][tailwind.css]
-* ![NextUI][nextui]
-* ![PostgreSQL][postgresql]
-
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
-
-
-<!-- GETTING STARTED -->
-## Cómo empezar
-
-Para crear una cuenta basta con ir a la [página principal](https://tata-care.vercel.app/) y darle click a botón de empezar.
-
-Ahora, para abrir el repositorio en un entorno de desarrollo puede seguir los siguientes pasos.
-
-### Prerequisitos
-
-Se necesita usar NPM para levantar el proyecto:
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-Además, en [Vercel](vercel-url) es necesario crear una base de datos PostgreSQL y una base de datos Blob
-
-### Instalación
-
-1. Clona el repositorio
-   ```sh
-   git clone https://github.com/KevinCastle/TataCare.git
-   ```
-2. Instala el proyecto
-   ```sh
-   npm install
-   ```
-3. Introduce tu API key en un archivo .env
-   ```js
-   POSTGRES_URL="{{API_key}}"
-    BLOB_READ_WRITE_TOKEN="{{Blob token}}"
-    . . .
-   ```
-4. Lanza la app
-   ```sh
-   npm run dev
-   ```
-
-### Deployment en Vercel
-
-TataCare está deployado en Vercel. Para mantener o redeployar la aplicación:
-
-#### Variables de entorno necesarias
-
-Copia el archivo `.env.example` como referencia:
-```sh
-cp .env.example .env.local
+```bash
+npm install
+npm run dev   # → localhost:3000  ·  /cocina para el design system
 ```
 
-Luego configura las siguientes variables en tu dashboard de Vercel o archivo `.env.local`:
+## Stack
 
-- **POSTGRES_URL**: Connection string de PostgreSQL (proporcionado por Vercel)
-- **BLOB_READ_WRITE_TOKEN**: Token de autenticación para Vercel Blob
-- **NEXTAUTH_URL**: URL canónica de la aplicación (ej: https://tata-care.vercel.app)
-- **NEXTAUTH_SECRET**: Clave secreta para sesiones JWT (generar: `openssl rand -base64 32`)
-
-#### Deployar en Vercel
-
-1. Conecta tu repositorio a [Vercel](https://vercel.com)
-2. Las variables de entorno se configuran automáticamente en el dashboard de Vercel
-3. Cada push a `main` genera un deployment automático
-4. Los PRs generan preview deployments automáticos
-
-#### Build y start local
-
-```sh
-# Build para producción
-npm run build
-
-# Ejecutar servidor de producción (después del build)
-npm start
-
-# Verificar linting
-npm run lint
-```
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Login con Google
-- [ ] Modo offline y que pueda mandar notificaciones
-- [ ] Poder descargar ficha en PDF
-- [ ] Editar usuarios y poder subir fotos de perfil
-
-<p align="right">(<a href="#readme-top">volver arriba</a>)</p>
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-
-<!-- Contributors -->
-[contributors-shield]: https://img.shields.io/github/contributors/KevinCastle/TataCare.svg?style=for-the-badge
-[contributors-url]: https://github.com/KevinCastle/TataCare/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/KevinCastle/TataCare.svg?style=for-the-badge
-[forks-url]: https://github.com/KevinCastle/TataCare/network/members
-[stars-shield]: https://img.shields.io/github/stars/KevinCastle/TataCare.svg?style=for-the-badge
-[stars-url]: https://github.com/KevinCastle/TataCare/stargazers
-
-<!-- External -->
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/kevin-castillo11/
-[web-site]: https://tata-care.vercel.app/
-[vercel-url]: https://vercel.com/home
-
-<!-- Issues -->
-[issues-shield]: https://img.shields.io/github/issues/KevinCastle/TataCare.svg?style=for-the-badge
-[issues-url]: https://github.com/KevinCastle/TataCare/issues
-
-<!-- Build with -->
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[typescript]: https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white
-[tailwind.css]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
-[postgresql]: https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white
-[vercel]: https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white
-[nextui]: https://img.shields.io/badge/nextui-000000?style=for-the-badge&logo=nextui&logoColor=white
+Next.js 15 (App Router) · TypeScript estricto · Tailwind CSS v4. La base de datos (Prisma +
+PostgreSQL) y la autenticación llegan en los Meses 2–3 del roadmap.
