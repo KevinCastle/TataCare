@@ -1,63 +1,63 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Paleta "Papel, pino y copihue" — ver docs/v2-propuesta-diseno.md */
+  --color-papel: #faf6ef;
+  --color-crema: #fffdf8;
+  --color-tinta: #22302c;
+  --color-pino: #14584e;
+  --color-pino-oscuro: #0e453d;
+  --color-copihue: #c2455f;
+  --color-alerta: #b3261e;
+  --color-aviso: #8a5a00;
+  --color-bien: #2e7d32;
+  --color-niebla: #5c6b66;
+  --color-linea: #e4dfd4;
+
+  --font-sans: var(--font-atkinson), system-ui, -apple-system, sans-serif;
+
+  --radius-card: 1rem;
+  --radius-control: 0.75rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background: var(--color-papel);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+    /* Cuerpo base 17px: contrato de accesibilidad del design system */
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-pino);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Área segura para PWA instalada (notch / home indicator) */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
   }
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-.hero-background {
-  position: relative;
-  background-color: #99C7FB;
-}
-
-.logo-background {
-  position: relative;
-  background-image: linear-gradient(to bottom, #002e62, #99c7fb);
-}
-
-.hero-background::before,
-.logo-background::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('https://qjsik5ugffyu4v6q.public.blob.vercel-storage.com/landing/Vector-logo-gwTkgsbtdCnM6zCBSe8sYBwdk5ftDl.png'); /* Your image here */
-  opacity: 0.3;
-  background-position: center;
-  background-repeat: repeat;
-}
-
-.hero-background::before{
-  background-size: cover;
-}
-
-.logo-background::before{
-  background-size: auto;
-}
-
-.hero-background > *,
-.logo-background > * {
-  position: relative;
-  z-index: 1;
-}
-
-@media screen and (min-width: 1024px) {
-  .hero-background::before {
-   opacity: 1;
-  }
-
-  .logo-background::before {
-    background-size: contain;
-  }
-  
-}
-

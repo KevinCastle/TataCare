@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  surname   String
+  email     String   @unique
+  password  String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+
+  caregiverOf Caregiver[]
+  logs        DailyLog[]
+  documents   Document[]
+  shifts      Shift[]
+  invitesSent Invite[]
+}
+
+model Elder {
+  id                   String    @id @default(cuid())
+  name                 String
+  surname              String
+  sex                  String // "femenino" | "masculino"
+  birthdate            DateTime
+  bloodType            String?
+  insurance            String? // previsión: Fonasa, Isapre…
+  nationality          String?
+  identificationNumber String?
+  weightKg             Int?
+  avatarUrl            String?
+  favoriteContactId    String?
+  createdAt            DateTime  @default(now())
+
+  caregivers  Caregiver[]
+  medications Medication[]
+  conditions  Condition[]
+  contacts    Contact[]
+  tastes      Taste[]
+  logs        DailyLog[]
+  invites     Invite[]
+  documents   Document[]
+  shifts      Shift[]
+}
+
+enum CaregiverRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+model Caregiver {
+  elderId String
+  userId  String
+  role    CaregiverRole @default(EDITOR)
+  since   DateTime      @default(now())
+
+  elder Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([elderId, userId])
+}
+
+enum ConditionType {
+  DISEASE
+  ALLERGY
+}
+
+model Condition {
+  id           String        @id @default(cuid())
+  elderId      String
+  type         ConditionType
+  name         String
+  detail       String?
+  registeredBy String? // nombre de quien la registró (rastro de confianza)
+  createdAt    DateTime      @default(now())
+
+  elder       Elder        @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  medications Medication[]
+}
+
+model Medication {
+  id            String    @id @default(cuid())
+  elderId       String
+  name          String
+  dose          String // "50 mg", "10 gotas"
+  intervalHours Int?
+  instructions  String?
+  pharmacy      String?
+  startDate     DateTime?
+  endDate       DateTime?
+  favorite      Boolean   @default(false)
+  conditionId   String?
+  registeredBy  String?
+  createdAt     DateTime  @default(now())
+
+  elder     Elder      @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  condition Condition? @relation(fields: [conditionId], references: [id], onDelete: SetNull)
+}
+
+model Contact {
+  id      String  @id @default(cuid())
+  elderId String
+  name    String
+  role    String // "Hija", "Doctor de cabecera", "Clínica"…
+  phone   String
+  address String?
+
+  elder Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+}
+
+model Taste {
+  id          String  @id @default(cuid())
+  elderId     String
+  detail      String
+  note        String? // el "por qué" / contexto
+  pleasure    Boolean @default(false)
+  displeasure Boolean @default(false)
+  avoid       Boolean @default(false)
+  activity    Boolean @default(false)
+
+  elder Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+}
+
+model DailyLog {
+  id               String   @id @default(cuid())
+  elderId          String
+  authorId         String
+  date             DateTime @default(now())
+  dayRating        Int
+  emotionRating    Int
+  digestionRating  Int
+  physicalActivity Boolean  @default(false)
+  note             String?
+
+  elder  Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  author User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+enum InviteKind {
+  CAREGIVER
+  DOCTOR
+}
+
+model Invite {
+  id          String         @id @default(cuid())
+  code        String         @unique
+  elderId     String
+  kind        InviteKind
+  role        CaregiverRole? // solo para kind = CAREGIVER
+  expiresAt   DateTime
+  usedAt      DateTime? // los links de cuidador son de un solo uso
+  revokedAt   DateTime?
+  createdById String
+  createdAt   DateTime       @default(now())
+
+  elder     Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  createdBy User  @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  elderId    String
+  uploaderId String
+  title      String
+  type       String // "examen" | "receta" | "epicrisis" | "otro"
+  fileUrl    String
+  mimeType   String?
+  date       DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  elder    Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  uploader User  @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+}
+
+model Shift {
+  id      String  @id @default(cuid())
+  elderId String
+  userId  String
+  date    String // YYYY-MM-DD (día local Chile)
+  note    String?
+
+  elder Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([elderId, date, userId])
+  @@index([elderId, date])
+}
