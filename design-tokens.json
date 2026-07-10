@@ -1,0 +1,94 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "TataCare v2 — tokens de marca 'papel, pino y copihue'. Fuente de verdad única: úsalos en Tailwind (web), StyleSheet/Tamagui (Expo) o para generar la librería de Figma. Los ratios de contraste están calculados sobre Papel.",
+  "color": {
+    "papel": {
+      "$value": "#FAF6EF",
+      "$type": "color",
+      "$description": "Fondo global. Papel cálido, no blanco hospital."
+    },
+    "crema": {
+      "$value": "#FFFDF8",
+      "$type": "color",
+      "$description": "Superficie de tarjetas sobre papel."
+    },
+    "tinta": {
+      "$value": "#22302C",
+      "$type": "color",
+      "$description": "Texto principal. 12.8:1 sobre papel (AAA)."
+    },
+    "pino": {
+      "$value": "#14584E",
+      "$type": "color",
+      "$description": "Primario: botones, tabs activos, links. 7.7:1 sobre papel; blanco encima 8.3:1 (AAA)."
+    },
+    "pino-oscuro": {
+      "$value": "#0E453D",
+      "$type": "color",
+      "$description": "Variante para texto pino sobre papel. 10.1:1 (AAA)."
+    },
+    "copihue": {
+      "$value": "#C2455F",
+      "$type": "color",
+      "$description": "Acento emocional: favoritos, gustos, el corazón del logo. 4.5:1 (AA, íconos y texto grande). NUNCA para peligro."
+    },
+    "alerta": {
+      "$value": "#B3261E",
+      "$type": "color",
+      "$description": "SOLO peligro: alergias, urgencias, destructivo. 6.1:1. Siempre con ícono + palabra, nunca color solo."
+    },
+    "aviso": {
+      "$value": "#8A5A00",
+      "$type": "color",
+      "$description": "Advertencia: tratamientos por vencer. 5.5:1."
+    },
+    "bien": {
+      "$value": "#2E7D32",
+      "$type": "color",
+      "$description": "Positivo: al día, confirmaciones. 4.8:1."
+    },
+    "niebla": {
+      "$value": "#5C6B66",
+      "$type": "color",
+      "$description": "Texto secundario y metadatos. 5.2:1."
+    },
+    "linea": {
+      "$value": "#E4DFD4",
+      "$type": "color",
+      "$description": "Bordes y divisores."
+    }
+  },
+  "font": {
+    "familia": {
+      "$value": "Atkinson Hyperlegible",
+      "$type": "fontFamily",
+      "$description": "Diseñada por el Braille Institute para baja visión. Pesos: 400 y 700."
+    },
+    "titulo": {
+      "$value": { "fontSize": "28px", "fontWeight": 700, "lineHeight": 1.15 },
+      "$type": "typography"
+    },
+    "seccion": {
+      "$value": { "fontSize": "22px", "fontWeight": 700, "lineHeight": 1.2 },
+      "$type": "typography"
+    },
+    "cuerpo": {
+      "$value": { "fontSize": "17px", "fontWeight": 400, "lineHeight": 1.55 },
+      "$type": "typography",
+      "$description": "El mínimo del sistema — no 14 ni 16. Siempre en rem para respetar el ajuste del usuario."
+    },
+    "etiqueta": {
+      "$value": { "fontSize": "13px", "fontWeight": 700, "letterSpacing": "0.12em", "textTransform": "uppercase" },
+      "$type": "typography"
+    }
+  },
+  "dimension": {
+    "touch-minimo": {
+      "$value": "48px",
+      "$type": "dimension",
+      "$description": "Alto/ancho mínimo de cualquier control tocable. WCAG 2.2 pide 24 — doblamos."
+    },
+    "radio-tarjeta": { "$value": "16px", "$type": "dimension" },
+    "radio-control": { "$value": "12px", "$type": "dimension" }
+  }
+}
