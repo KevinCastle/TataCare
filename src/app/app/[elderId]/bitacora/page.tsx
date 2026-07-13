@@ -16,12 +16,15 @@ export default async function BitacoraPage({ params }: { params: Promise<{ elder
   const { elderId } = await params;
   const { elder, role } = await accesoAlTata(elderId);
 
-  const registros = await db.dailyLog.findMany({
-    where: { elderId },
-    orderBy: { date: 'desc' },
-    take: 30,
-    include: { author: { select: { name: true, surname: true } } },
-  });
+  const [registros, notasMedicas] = await Promise.all([
+    db.dailyLog.findMany({
+      where: { elderId },
+      orderBy: { date: 'desc' },
+      take: 30,
+      include: { author: { select: { name: true, surname: true, avatarUrl: true } } },
+    }),
+    db.doctorNote.findMany({ where: { elderId }, orderBy: { createdAt: 'desc' }, take: 5 }),
+  ]);
 
   return (
     <>
@@ -29,6 +32,20 @@ export default async function BitacoraPage({ params }: { params: Promise<{ elder
       <Content>
         <div className="flex flex-col gap-5">
           {puedeEditar(role) ? <BitacoraForm action={crearRegistro.bind(null, elderId)} nombreTata={elder.name} /> : null}
+
+          {notasMedicas.length > 0 ? (
+            <>
+              <SectionLabel>🩺 Notas clínicas</SectionLabel>
+              {notasMedicas.map((n) => (
+                <Card key={n.id} className="border-pino/40 p-3.5">
+                  <p className="text-[0.9rem] font-bold text-pino-oscuro">
+                    {n.doctorName} · {formatoFechaCompleta(n.createdAt)}
+                  </p>
+                  <p className="mt-1 text-[0.95rem]">{n.note}</p>
+                </Card>
+              ))}
+            </>
+          ) : null}
 
           <SectionLabel>Registros anteriores</SectionLabel>
           {registros.length === 0 ? (
@@ -39,7 +56,7 @@ export default async function BitacoraPage({ params }: { params: Promise<{ elder
             registros.map((r) => (
               <Card key={r.id} className="p-3.5">
                 <div className="flex items-center gap-2.5">
-                  <Avatar initials={iniciales(r.author.name, r.author.surname)} size="sm" tone="copihue" />
+                  <Avatar initials={iniciales(r.author.name, r.author.surname)} imageUrl={r.author.avatarUrl} size="sm" tone="copihue" />
                   <p className="min-w-0 flex-1 truncate text-[0.95rem] font-bold">
                     {r.author.name} · {formatoFechaCompleta(r.date)}
                   </p>

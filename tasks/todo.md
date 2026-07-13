@@ -27,9 +27,9 @@ semáforo de vigencia, Modo urgencia, Modo espejo con PIN. `npx tsc --noEmit` y 
 3. `npm run dev` → cuenta demo: `demo@tatacare.cl` / `tatacare123` (también `carmen@tatacare.cl`)
 
 **Pendientes conocidos (no bloqueantes):**
-- [ ] Subida de avatares (elder/user) — v2 usa iniciales por diseño; el campo `avatarUrl` ya existe
-- [ ] Nota clínica del médico desde /dr (roadmap Mes 10) — hoy /dr es solo lectura
-- [ ] Deploy a Vercel: crear DB Neon + Blob store, setear `DATABASE_URL`, `AUTH_SECRET`, `BLOB_READ_WRITE_TOKEN`
+- [x] Subida de avatares (elder/user) — foto opcional en la ficha del tata y en /app/perfil; iniciales siguen siendo el default
+- [x] Nota clínica del médico desde /dr — el médico deja indicaciones sin cuenta y aparecen en la Bitácora (código de prueba local: TATA-TEST)
+- [x] Deploy: preview en Vercel (proyecto tata-care, tras SSO) con DB `tatacare_v2` aislada — decisión: NO se promueve a producción, esta rama es guía
 - [ ] Reescribir README y CLAUDE.md para la arquitectura v2 (aún describen v1)
 - [ ] Auditoría Lighthouse formal (axe) — a11y aplicada por diseño, falta el número
 - [ ] Migración de datos reales de v1 (schema mapping directo, decidir cuándo)

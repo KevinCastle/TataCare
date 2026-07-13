@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { usuarioActual } from '@/lib/access';
 import { db } from '@/lib/db';
-import { cerrarSesion } from '@/lib/actions/auth';
 import { diasRestantes, edad, fechaISO, iniciales, saludo } from '@/lib/utils';
 import { Avatar, ButtonLink, CardLink, Chip, EmptyState, SectionLabel } from '@/components/ui';
 import { IconChevron, IconPlus, IconUsers, LogoMark } from '@/components/icons';
@@ -10,8 +9,13 @@ import { IconChevron, IconPlus, IconUsers, LogoMark } from '@/components/icons';
 export const metadata: Metadata = { title: 'Mis tatas' };
 
 export default async function MisTatasPage() {
-  const user = await usuarioActual();
+  const sesion = await usuarioActual();
   const hoy = fechaISO();
+
+  const user = await db.user.findUniqueOrThrow({
+    where: { id: sesion.id },
+    select: { id: true, name: true, surname: true, avatarUrl: true },
+  });
 
   const cuidados = await db.caregiver.findMany({
     where: { userId: user.id },
@@ -32,7 +36,7 @@ export default async function MisTatasPage() {
     orderBy: { elder: { name: 'asc' } },
   });
 
-  const nombrePila = user.name?.split(' ')[0] ?? '';
+  const nombrePila = user.name;
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-4">
@@ -44,14 +48,13 @@ export default async function MisTatasPage() {
           <p className="text-[0.9rem] text-niebla">{saludo()},</p>
           <h1 className="truncate text-xl font-bold leading-tight">{nombrePila}</h1>
         </div>
-        <form action={cerrarSesion}>
-          <button
-            type="submit"
-            className="flex min-h-12 items-center rounded-xl px-3 text-[0.9rem] font-bold text-niebla hover:bg-pino/10 hover:text-tinta"
-          >
-            Salir
-          </button>
-        </form>
+        <Link
+          href="/app/perfil"
+          aria-label="Mi perfil"
+          className="rounded-full focus-visible:outline-3 focus-visible:outline-pino"
+        >
+          <Avatar initials={iniciales(user.name, user.surname)} imageUrl={user.avatarUrl} size="md" tone="copihue" />
+        </Link>
       </header>
 
       <main id="contenido" className="flex flex-1 flex-col gap-3 pb-10">

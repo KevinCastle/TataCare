@@ -36,7 +36,7 @@ con `prepared statement "s0" already exists`, porque el Postgres local multiplex
 | Gustos (Mes 6) | `tastes/` — flags combinables, el "por qué" en `note` |
 | Bitácora (Mes 7) | `logs.ts` + `bitacora-form.tsx` — la action devuelve `ok` y el form se resetea |
 | Roles y compartir (Mes 9) | `src/lib/access.ts` (`accesoAlTata`, jerarquía VIEWER<EDITOR<OWNER) + `share.ts` (invitaciones de un solo uso) |
-| Acceso médico (Mes 10) | `share.ts` (códigos TATA-XXXX con expiración) + `src/app/dr/` (vista pública solo lectura) |
+| Acceso médico (Mes 10) | `share.ts` (códigos TATA-XXXX con expiración) + `src/app/dr/` (vista pública) + `actions/doctor.ts` (nota clínica sin cuenta — la única escritura pública, autorizada por el código vigente) |
 | Carpeta médica | `storage.ts` (Blob en prod, `.uploads/` en dev) + `documents.ts` |
 | Turnos | `shifts.ts` — clave `YYYY-MM-DD` en zona America/Santiago (`fechaISO()`) |
 | Modo urgencia | `src/app/app/urgencia/[elderId]/` — fuera del layout con tabs a propósito |
@@ -55,6 +55,8 @@ con `prepared statement "s0" already exists`, porque el Postgres local multiplex
    en todas las actions.
 5. **Fechas siempre en `America/Santiago`** vía `Intl` (`src/lib/utils.ts`) — evita el clásico
    "el turno cambió de día a medianoche UTC".
+
+| Avatares con foto | `procesarAvatar()` en `actions/elders.ts` (valida tipo/peso) — usado en ficha del tata y `/app/perfil` |
 
 ## Pendientes que quedaron anotados
 

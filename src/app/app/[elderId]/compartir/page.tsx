@@ -24,7 +24,7 @@ export default async function CompartirPage({ params }: { params: Promise<{ elde
   const [cuidadores, invitaciones] = await Promise.all([
     db.caregiver.findMany({
       where: { elderId },
-      include: { user: { select: { id: true, name: true, surname: true } } },
+      include: { user: { select: { id: true, name: true, surname: true, avatarUrl: true } } },
       orderBy: { since: 'asc' },
     }),
     db.invite.findMany({
@@ -47,7 +47,7 @@ export default async function CompartirPage({ params }: { params: Promise<{ elde
             <Card className="flex flex-col gap-3 p-3.5">
               {cuidadores.map((c) => (
                 <div key={c.userId} className="flex items-center gap-3">
-                  <Avatar initials={iniciales(c.user.name, c.user.surname)} size="sm" tone={c.role === 'OWNER' ? 'copihue' : 'pino'} />
+                  <Avatar initials={iniciales(c.user.name, c.user.surname)} imageUrl={c.user.avatarUrl} size="sm" tone={c.role === 'OWNER' ? 'copihue' : 'pino'} />
                   <p className="min-w-0 flex-1 truncate font-bold">
                     {c.user.name} {c.user.surname}
                     {c.userId === user.id ? <span className="font-normal text-niebla"> (tú)</span> : null}

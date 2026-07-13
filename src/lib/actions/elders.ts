@@ -5,7 +5,21 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { accesoAlTata, usuarioActual } from '@/lib/access';
+import { guardarArchivo } from '@/lib/storage';
 import { erroresDeZod, type FormState } from '@/lib/form-state';
+
+/** Valida y guarda la foto opcional del formulario. */
+export async function procesarAvatar(formData: FormData) {
+  const file = formData.get('avatar');
+  if (!(file instanceof File) || file.size === 0) return { url: null };
+  if (!file.type.startsWith('image/')) {
+    return { url: null, error: { errors: { avatar: 'Solo fotos (JPG, PNG…)' } } };
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    return { url: null, error: { errors: { avatar: 'La foto pesa más de 5 MB — prueba con una más liviana' } } };
+  }
+  return { url: await guardarArchivo(file, 'avatares'), error: undefined };
+}
 
 const tataSchema = z.object({
   name: z.string().trim().min(1, 'Escribe su nombre'),
@@ -55,9 +69,13 @@ export async function crearTata(_prev: FormState, formData: FormData): Promise<F
   const result = datosDeTata(formData);
   if (!result.ok) return result.error;
 
+  const avatar = await procesarAvatar(formData);
+  if (avatar.error) return avatar.error;
+
   const elder = await db.elder.create({
     data: {
       ...result.data,
+      avatarUrl: avatar.url,
       caregivers: { create: { userId: user.id, role: 'OWNER' } },
     },
   });
@@ -71,7 +89,13 @@ export async function editarTata(elderId: string, _prev: FormState, formData: Fo
   const result = datosDeTata(formData);
   if (!result.ok) return result.error;
 
-  await db.elder.update({ where: { id: elderId }, data: result.data });
+  const avatar = await procesarAvatar(formData);
+  if (avatar.error) return avatar.error;
+
+  await db.elder.update({
+    where: { id: elderId },
+    data: { ...result.data, ...(avatar.url ? { avatarUrl: avatar.url } : {}) },
+  });
 
   revalidatePath(`/app/${elderId}`);
   redirect(`/app/${elderId}`);

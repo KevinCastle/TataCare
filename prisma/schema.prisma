@@ -47,6 +47,7 @@ model Elder {
   invites     Invite[]
   documents   Document[]
   shifts      Shift[]
+  doctorNotes DoctorNote[]
 }
 
 enum CaregiverRole {
@@ -162,6 +163,16 @@ model Invite {
 
   elder     Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
   createdBy User  @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}
+
+model DoctorNote {
+  id         String   @id @default(cuid())
+  elderId    String
+  doctorName String
+  note       String
+  createdAt  DateTime @default(now())
+
+  elder Elder @relation(fields: [elderId], references: [id], onDelete: Cascade)
 }
 
 model Document {

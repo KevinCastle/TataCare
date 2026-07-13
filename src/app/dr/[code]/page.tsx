@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { db } from '@/lib/db';
+import { dejarNotaMedica } from '@/lib/actions/doctor';
 import { edad, formatoFechaCompleta, formatoFechaHora } from '@/lib/utils';
+import { NotaMedicaForm } from '@/components/nota-medica-form';
 import { ButtonLink, Card, Chip, SectionLabel } from '@/components/ui';
 import { IconAlert, IconStar, LogoMark } from '@/components/icons';
 
@@ -42,6 +44,7 @@ export default async function FichaMedicoPage({ params }: { params: Promise<{ co
       medications: { include: { condition: { select: { name: true } } }, orderBy: { name: 'asc' } },
       contacts: true,
       logs: { orderBy: { date: 'desc' }, take: 7, include: { author: { select: { name: true } } } },
+      doctorNotes: { orderBy: { createdAt: 'desc' }, take: 5 },
     },
   });
   if (!elder) return null;
@@ -159,6 +162,22 @@ export default async function FichaMedicoPage({ params }: { params: Promise<{ co
             ))
           )}
         </section>
+
+        {elder.doctorNotes.length > 0 ? (
+          <section className="flex flex-col gap-2">
+            <SectionLabel>Notas clínicas anteriores</SectionLabel>
+            {elder.doctorNotes.map((n) => (
+              <Card key={n.id} className="border-pino/40 p-3.5">
+                <p className="text-[0.9rem] font-bold text-pino-oscuro">
+                  {n.doctorName} · {formatoFechaCompleta(n.createdAt)}
+                </p>
+                <p className="mt-1 text-[0.95rem]">{n.note}</p>
+              </Card>
+            ))}
+          </section>
+        ) : null}
+
+        <NotaMedicaForm action={dejarNotaMedica.bind(null, invite.code)} />
 
         {contacto ? (
           <p className="rounded-xl border-[1.5px] border-dashed border-linea px-4 py-3 text-[0.95rem] text-niebla">
